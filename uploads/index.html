@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IL MANO — Summer 2026</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Helvetica+Neue:wght@300;400&display=swap" rel="stylesheet" />
+  <!-- fallback for Helvetica Neue -->
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@300;400&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ─── DESIGN TOKENS ─────────────────────────────────────────── */
+    :root {
+      --black:   #0a0a0a;
+      --white:   #f5f4f0;
+      --off:     #e8e6e0;
+      --mid:     #9a9690;
+      --accent:  #1a1a1a;
+      --font-display: 'Cormorant Garamond', Georgia, serif;
+      --font-body:    'DM Sans', 'Helvetica Neue', Helvetica, sans-serif;
+      --ease: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* ─── RESET ──────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--white);
+      color: var(--black);
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 13px;
+      letter-spacing: 0.04em;
+      overflow-x: hidden;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; width: 100%; object-fit: cover; }
+    button { cursor: pointer; border: none; background: none; font-family: var(--font-body); }
+
+    /* ─── NAV ────────────────────────────────────────────────────── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+      height: 56px;
+      background: var(--white);
+      border-bottom: 1px solid rgba(0,0,0,0.08);
+      transition: background 0.4s var(--ease);
+    }
+    nav.scrolled { background: rgba(245,244,240,0.95); backdrop-filter: blur(12px); }
+    .nav-left, .nav-right {
+      display: flex;
+      gap: 28px;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    .nav-link {
+      position: relative;
+      padding-bottom: 2px;
+      transition: opacity 0.2s;
+    }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0;
+      width: 0; height: 1px;
+      background: var(--black);
+      transition: width 0.3s var(--ease);
+    }
+    .nav-link:hover::after { width: 100%; }
+    .nav-wordmark {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 400;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    /* ─── HERO ───────────────────────────────────────────────────── */
+    .hero {
+      position: relative;
+      height: 100vh;
+      overflow: hidden;
+    }
+    .hero-img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      /* REPLACE src with your actual hero image */
+      background: var(--black);
+      /* animation: slowzoom 14s ease forwards; */
+    }
+    /* Uncomment when real img is in place */
+    @keyframes slowzoom {
+      from { transform: scale(1.06); }
+      to   { transform: scale(1); }
+    }
+    .hero img { animation: slowzoom 14s ease forwards; }
+
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.12) 0%, rgba(0,0,0,0.45) 100%);
+    }
+    .hero-text {
+      position: absolute;
+      bottom: 80px;
+      left: 60px;
+      color: var(--white);
+    }
+    .hero-season {
+      font-size: 11px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      opacity: 0.7;
+      margin-bottom: 16px;
+    }
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(52px, 8vw, 110px);
+      font-weight: 300;
+      line-height: 0.95;
+      letter-spacing: -0.01em;
+      /* ANIMATION: title reveals upward on load */
+      overflow: hidden;
+    }
+    .hero-title span {
+      display: block;
+      animation: revealUp 1.1s var(--ease) 0.3s both;
+    }
+    .hero-title span:nth-child(2) { animation-delay: 0.5s; font-style: italic; }
+    @keyframes revealUp {
+      from { transform: translateY(100%); opacity: 0; }
+      to   { transform: translateY(0);    opacity: 1; }
+    }
+    .hero-cta {
+      display: inline-block;
+      margin-top: 36px;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--white);
+      border-bottom: 1px solid rgba(255,255,255,0.5);
+      padding-bottom: 3px;
+      animation: fadeIn 1s var(--ease) 1s both;
+      transition: border-color 0.2s;
+    }
+    .hero-cta:hover { border-color: var(--white); }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ─── SECTION LABEL ──────────────────────────────────────────── */
+    .section-label {
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--mid);
+      margin-bottom: 40px;
+    }
+
+    /* ─── CATEGORY GRID ──────────────────────────────────────────── */
+    .categories {
+      padding: 100px 40px;
+      background: var(--white);
+    }
+    .cat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+    }
+    .cat-item {
+      position: relative;
+      overflow: hidden;
+      aspect-ratio: 4/5;
+      background: var(--black);
+      cursor: pointer;
+    }
+    .cat-item img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 0.8s var(--ease), opacity 0.4s;
+      opacity: 0.88;
+    }
+    .cat-item:hover img { transform: scale(1.04); opacity: 0.75; }
+    .cat-label {
+      position: absolute;
+      bottom: 28px; left: 28px;
+      color: var(--white);
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 300;
+      letter-spacing: 0.06em;
+    }
+    .cat-label small {
+      display: block;
+      font-family: var(--font-body);
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      opacity: 0.6;
+      margin-bottom: 6px;
+    }
+
+    /* ─── PRODUCT GRID ───────────────────────────────────────────── */
+    .collection {
+      padding: 80px 40px;
+      background: var(--off);
+    }
+    .collection-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 48px;
+    }
+    .collection-title {
+      font-family: var(--font-display);
+      font-size: 42px;
+      font-weight: 300;
+      letter-spacing: 0.02em;
+    }
+    .sort-btn {
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      border-bottom: 1px solid var(--mid);
+      padding-bottom: 2px;
+      color: var(--mid);
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .sort-btn:hover { color: var(--black); border-color: var(--black); }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px 24px;
+    }
+    .product-card {
+      cursor: pointer;
+    }
+    .product-img-wrap {
+      position: relative;
+      overflow: hidden;
+      aspect-ratio: 3/4;
+      background: #ddd;
+      margin-bottom: 16px;
+    }
+    .product-img-wrap img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 0.7s var(--ease);
+    }
+    .product-card:hover .product-img-wrap img { transform: scale(1.04); }
+
+    .product-info { display: flex; justify-content: space-between; align-items: flex-start; }
+    .product-name {
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .product-price { font-size: 12px; color: var(--mid); }
+
+    /* Color swatches on card */
+    .product-swatches {
+      display: flex;
+      gap: 6px;
+      margin-top: 10px;
+    }
+    .swatch-dot {
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      border: 1px solid rgba(0,0,0,0.15);
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .swatch-dot:hover, .swatch-dot.active {
+      transform: scale(1.25);
+      box-shadow: 0 0 0 1.5px var(--black);
+    }
+
+    /* ─── PRODUCT DETAIL ─────────────────────────────────────────── */
+    .product-detail {
+      padding: 100px 40px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      background: var(--white);
+    }
+    .detail-gallery { display: flex; flex-direction: column; gap: 4px; }
+    .detail-gallery .main-img {
+      aspect-ratio: 3/4;
+      overflow: hidden;
+      background: var(--off);
+    }
+    .detail-gallery .main-img img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s var(--ease);
+    }
+    .detail-gallery .main-img:hover img { transform: scale(1.03); }
+    .thumb-row {
+      display: flex;
+      gap: 4px;
+    }
+    .thumb {
+      flex: 1;
+      aspect-ratio: 1;
+      overflow: hidden;
+      background: var(--off);
+      cursor: pointer;
+      opacity: 0.5;
+      transition: opacity 0.2s;
+    }
+    .thumb.active, .thumb:hover { opacity: 1; }
+    .thumb img { width: 100%; height: 100%; object-fit: cover; }
+
+    /* Detail info panel */
+    .detail-info { padding-top: 8px; }
+    .detail-breadcrumb {
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--mid);
+      margin-bottom: 28px;
+    }
+    .detail-name {
+      font-family: var(--font-display);
+      font-size: 38px;
+      font-weight: 300;
+      letter-spacing: 0.02em;
+      margin-bottom: 8px;
+    }
+    .detail-price {
+      font-size: 18px;
+      font-weight: 300;
+      letter-spacing: 0.06em;
+      margin-bottom: 36px;
+    }
+
+    /* Color swatches – detail */
+    .swatch-label {
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--mid);
+      margin-bottom: 14px;
+    }
+    .swatch-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 36px;
+    }
+    .swatch-block {
+      width: 32px; height: 32px;
+      border: 1px solid rgba(0,0,0,0.12);
+      cursor: pointer;
+      position: relative;
+      transition: transform 0.2s;
+    }
+    .swatch-block::after {
+      content: '';
+      position: absolute;
+      inset: -3px;
+      border: 1px solid transparent;
+      transition: border-color 0.2s;
+    }
+    .swatch-block:hover { transform: scale(1.1); }
+    .swatch-block.active::after { border-color: var(--black); }
+
+    /* Size selector */
+    .size-label {
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--mid);
+      margin-bottom: 14px;
+    }
+    .size-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 36px;
+      flex-wrap: wrap;
+    }
+    .size-btn {
+      width: 48px; height: 48px;
+      border: 1px solid rgba(0,0,0,0.18);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+    }
+    .size-btn:hover { border-color: var(--black); }
+    .size-btn.active { background: var(--black); color: var(--white); border-color: var(--black); }
+    .size-btn.sold-out { opacity: 0.3; cursor: not-allowed; text-decoration: line-through; }
+
+    /* Add to cart */
+    .add-to-cart {
+      width: 100%;
+      height: 52px;
+      background: var(--black);
+      color: var(--white);
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      transition: opacity 0.2s, transform 0.2s;
+      margin-bottom: 40px;
+    }
+    .add-to-cart:hover { opacity: 0.8; }
+    .add-to-cart:active { transform: scale(0.99); }
+
+    /* Product description */
+    .detail-desc-title {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 300;
+      margin-bottom: 14px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid rgba(0,0,0,0.1);
+    }
+    .detail-desc-body {
+      font-size: 13px;
+      line-height: 1.8;
+      color: #444;
+      margin-bottom: 28px;
+    }
+    .detail-specs {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .spec-row {
+      display: flex;
+      gap: 16px;
+      font-size: 12px;
+      letter-spacing: 0.06em;
+    }
+    .spec-key {
+      width: 80px;
+      color: var(--mid);
+      text-transform: uppercase;
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      padding-top: 1px;
+    }
+
+    /* ─── MARQUEE / EDITORIAL STRIP ──────────────────────────────── */
+    .marquee-strip {
+      background: var(--black);
+      color: var(--white);
+      padding: 18px 0;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+    .marquee-track {
+      display: inline-flex;
+      animation: marquee 22s linear infinite;
+    }
+    .marquee-item {
+      font-family: var(--font-display);
+      font-size: 15px;
+      font-weight: 300;
+      font-style: italic;
+      letter-spacing: 0.08em;
+      padding: 0 56px;
+      opacity: 0.7;
+    }
+    .marquee-sep { opacity: 0.25; }
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    /* ─── FOOTER ─────────────────────────────────────────────────── */
+    footer {
+      background: var(--black);
+      color: var(--white);
+      padding: 80px 40px 40px;
+    }
+    .footer-top {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr 1fr;
+      gap: 40px;
+      padding-bottom: 60px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      margin-bottom: 40px;
+    }
+    .footer-brand {
+      font-family: var(--font-display);
+      font-size: 32px;
+      font-weight: 300;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .footer-tagline {
+      font-size: 12px;
+      line-height: 1.8;
+      color: rgba(255,255,255,0.45);
+      max-width: 240px;
+    }
+    .footer-col-title {
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+      margin-bottom: 20px;
+    }
+    .footer-links {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .footer-link {
+      font-size: 13px;
+      color: rgba(255,255,255,0.65);
+      letter-spacing: 0.04em;
+      transition: color 0.2s;
+    }
+    .footer-link:hover { color: var(--white); }
+
+    /* Newsletter */
+    .newsletter-form {
+      display: flex;
+      border-bottom: 1px solid rgba(255,255,255,0.25);
+      margin-top: 8px;
+    }
+    .newsletter-input {
+      flex: 1;
+      background: none;
+      border: none;
+      color: var(--white);
+      font-family: var(--font-body);
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      padding: 8px 0;
+      outline: none;
+    }
+    .newsletter-input::placeholder { color: rgba(255,255,255,0.3); }
+    .newsletter-submit {
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.5);
+      transition: color 0.2s;
+      padding: 8px 0 8px 16px;
+    }
+    .newsletter-submit:hover { color: var(--white); }
+
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      color: rgba(255,255,255,0.25);
+      text-transform: uppercase;
+    }
+
+    /* ─── SCROLL REVEAL ──────────────────────────────────────────── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.9s var(--ease), transform 0.9s var(--ease);
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ─── PAGE TRANSITION OVERLAY ────────────────────────────────── */
+    #page-loader {
+      position: fixed;
+      inset: 0;
+      background: var(--black);
+      z-index: 999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: loaderOut 0.9s var(--ease) 0.6s forwards;
+    }
+    #page-loader span {
+      font-family: var(--font-display);
+      font-size: 28px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--white);
+      animation: fadeIn 0.5s ease 0.1s both;
+    }
+    @keyframes loaderOut {
+      to { transform: translateY(-100%); }
+    }
+
+    /* ─── RESPONSIVE ─────────────────────────────────────────────── */
+    @media (max-width: 768px) {
+      nav { padding: 0 20px; }
+      .nav-left, .nav-right { gap: 16px; }
+      .hero-text { left: 24px; bottom: 60px; }
+      .categories, .collection, .product-detail { padding: 60px 20px; }
+      .cat-grid { grid-template-columns: 1fr; }
+      .product-grid { grid-template-columns: repeat(2, 1fr); gap: 20px 12px; }
+      .product-detail { grid-template-columns: 1fr; gap: 40px; }
+      .footer-top { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- PAGE LOADER -->
+  <div id="page-loader"><span>IL MANO</span></div>
+
+  <!-- NAV -->
+  <nav id="main-nav">
+    <div class="nav-left">
+      <a href="#" class="nav-link">Clothing</a>
+      <a href="#" class="nav-link">Customs</a>
+    </div>
+    <a href="#" class="nav-wordmark">IL MANO</a>
+    <div class="nav-right">
+      <a href="#" class="nav-link">Search</a>
+      <a href="#" class="nav-link">Account</a>
+      <a href="#" class="nav-link">Bag (0)</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <!-- ENGINEER NOTE: Replace the div.hero-img with <img src="your-hero.jpg" ... > -->
+  <section class="hero">
+    <img class="hero-img" src="assets/ILMANO_PRODUCT_FRONT.jpg" alt="IL MANO Summer 2026" />
+    <div class="hero-overlay"></div>
+    <div class="hero-text">
+      <p class="hero-season">Summer 2026</p>
+      <h1 class="hero-title">
+        <span>American</span>
+        <span>Iconography</span>
+      </h1>
+      <a href="#collection" class="hero-cta">Shop the Collection →</a>
+    </div>
+  </section>
+
+  <!-- MARQUEE STRIP -->
+  <div class="marquee-strip" aria-hidden="true">
+    <div class="marquee-track">
+      <span class="marquee-item">IL MANO</span>
+      <span class="marquee-sep">—</span>
+      <span class="marquee-item">Summer 2026</span>
+      <span class="marquee-sep">—</span>
+      <span class="marquee-item">Manufactured in Los Angeles</span>
+      <span class="marquee-sep">—</span>
+      <!-- FIXME: Make a better slogan -->
+      <span class="marquee-item">Made to Connect</span> 
+      <span class="marquee-sep">—</span>
+      <span class="marquee-item">IL MANO</span>
+      <span class="marquee-sep">—</span>
+      <span class="marquee-item">Summer 2026</span>
+      <span class="marquee-sep">—</span>
+      <span class="marquee-item">Manufactured in Los Angeles</span>
+      <span class="marquee-sep">—</span>
+      <!-- FIXME: Make a better slogan -->
+      <span class="marquee-item">Made to Connect</span>
+      <span class="marquee-sep">—</span>
+    </div>
+  </div>
+
+  <!-- CATEGORY GRID -->
+  <section class="categories reveal">
+    <p class="section-label">Collections</p>
+    <div class="cat-grid">
+        <img src="assets/IlMANO_BLACK_HOODIE_(back).webp" alt="Hoodies" />
+        <div class="cat-label"><small>01</small>Hoodies</div>
+      </div>
+        <img src="assets/ChatGPT_Image_May_4_2026_01_28_36_PM.webp" alt="T-Shirts" />
+        <div class="cat-label"><small>02</small>T-Shirts</div>
+      </div>
+        <img src="assets/IlMANO_CAP_BROWN.webp" alt="Hats" />
+        <div class="cat-label"><small>03</small>Hats</div>
+      </div>
+        <img src="assets/ILMANO_BAG.png" alt="Bags" />
+        <div class="cat-label"><small>04</small>Bags</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRODUCT GRID -->
+  <section class="collection reveal" id="collection">
+    <div class="collection-header">
+      <div>
+        <p class="section-label">Summer 26 / Clothing</p>
+        <h2 class="collection-title">The Collection</h2>
+      </div>
+      <button class="sort-btn">Sort</button>
+    </div>
+
+    <div class="product-grid">
+      <!-- PRODUCT CARD — repeat this block for each product -->
+      <!-- ENGINEER NOTE: Update src, name, price, and swatch colors per product -->
+      <div class="product-card" onclick="openDetail()">
+        <div class="product-img-wrap" style="background:#ccc;">
+          <!-- <img src="assets/hoodie-black.jpg" alt="Classic Hoodie" /> -->
+        </div>
+        <div class="product-info">
+          <span class="product-name">Classic Hoodie</span>
+          <span class="product-price">$100</span>
+        </div>
+        <div class="product-swatches">
+          <div class="swatch-dot active" style="background:#0a0a0a;" title="Black" data-color="Black"></div>
+          <div class="swatch-dot" style="background:#f5f4f0;border-color:#ccc;" title="White" data-color="White"></div>
+          <div class="swatch-dot" style="background:#1c3faa;" title="Royal Blue" data-color="Royal Blue"></div>
+          <div class="swatch-dot" style="background:#7b5c3a;" title="Tan" data-color="Tan"></div>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="product-img-wrap" style="background:#e0e0e0;">
+          <!-- <img src="assets/hoodie-white.jpg" alt="Classic Hoodie White" /> -->
+        </div>
+        <div class="product-info">
+          <span class="product-name">Classic Hoodie</span>
+          <span class="product-price">$100</span>
+        </div>
+        <div class="product-swatches">
+          <div class="swatch-dot" style="background:#0a0a0a;" title="Black"></div>
+          <div class="swatch-dot active" style="background:#f5f4f0;border-color:#ccc;" title="White"></div>
+          <div class="swatch-dot" style="background:#1c3faa;" title="Royal Blue"></div>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="product-img-wrap" style="background:#1c3faa;">
+          <!-- <img src="assets/hoodie-blue.jpg" alt="Classic Hoodie Blue" /> -->
+        </div>
+        <div class="product-info">
+          <span class="product-name">Classic Hoodie</span>
+          <span class="product-price">$100</span>
+        </div>
+        <div class="product-swatches">
+          <div class="swatch-dot" style="background:#0a0a0a;" title="Black"></div>
+          <div class="swatch-dot" style="background:#f5f4f0;border-color:#ccc;" title="White"></div>
+          <div class="swatch-dot active" style="background:#1c3faa;" title="Royal Blue"></div>
+        </div>
+      </div>
+
+      <!-- Repeat above card blocks for remaining products... -->
+    </div>
+  </section>
+
+  <!-- PRODUCT DETAIL -->
+  <section class="product-detail reveal" id="product-detail" style="display:none;">
+    <div class="detail-gallery">
+      <div class="main-img">
+        <!-- <img src="assets/product-main.jpg" alt="Product" /> -->
+        <div style="background:#ccc;width:100%;height:100%;"></div>
+      </div>
+      <div class="thumb-row">
+        <div class="thumb active"><!-- <img src="assets/p1.jpg"> --><div style="background:#ccc;height:100%;"></div></div>
+        <div class="thumb"><!-- <img src="assets/p2.jpg"> --><div style="background:#bbb;height:100%;"></div></div>
+        <div class="thumb"><!-- <img src="assets/p3.jpg"> --><div style="background:#aaa;height:100%;"></div></div>
+        <div class="thumb"><!-- <img src="assets/p4.jpg"> --><div style="background:#999;height:100%;"></div></div>
+      </div>
+    </div>
+
+    <div class="detail-info">
+      <p class="detail-breadcrumb">Home / Collections / Summer 26</p>
+      <h2 class="detail-name">Classic Hoodie</h2>
+      <p class="detail-price">$100</p>
+
+      <p class="swatch-label">Colour — <span id="selected-color">Black</span></p>
+      <div class="swatch-row" id="color-swatches">
+        <div class="swatch-block active" style="background:#0a0a0a;" data-color="Black" onclick="selectColor(this)"></div>
+        <div class="swatch-block" style="background:#f5f4f0;border:1px solid #ccc;" data-color="White" onclick="selectColor(this)"></div>
+        <div class="swatch-block" style="background:#1c3faa;" data-color="Royal Blue" onclick="selectColor(this)"></div>
+        <div class="swatch-block" style="background:#7b5c3a;" data-color="Tan" onclick="selectColor(this)"></div>
+      </div>
+
+      <p class="size-label">Size</p>
+      <div class="size-row">
+        <button class="size-btn sold-out">XS</button>
+        <button class="size-btn" onclick="selectSize(this)">S</button>
+        <button class="size-btn active" onclick="selectSize(this)">M</button>
+        <button class="size-btn" onclick="selectSize(this)">L</button>
+        <button class="size-btn" onclick="selectSize(this)">XL</button>
+        <button class="size-btn" onclick="selectSize(this)">XXL</button>
+      </div>
+
+      <button class="add-to-cart">Add to Cart</button>
+
+      <p class="detail-desc-title">Delivery &amp; Returns</p>
+      <p class="detail-desc-body">
+        Precision in construction, transparency in delivery. We offer worldwide
+        shipping and a 14-day return window for a seamless home trial.
+      </p>
+
+      <p class="detail-desc-title">About this piece</p>
+      <p class="detail-desc-body">
+        Inspired by the weathered textures of the American West and refined for
+        the urban landscape. Crafted from premium 100% French terry and
+        undergoes a specialized LA-dye process to achieve a soft, lived-in
+        patina from the first wear.
+      </p>
+
+      <div class="detail-specs">
+        <div class="spec-row"><span class="spec-key">Material</span><span>100% French Terry Cotton</span></div>
+        <div class="spec-row"><span class="spec-key">Origin</span><span>Manufactured &amp; Dyed in Los Angeles, CA</span></div>
+        <div class="spec-row"><span class="spec-key">Fit</span><span>Relaxed / Unisex</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-top">
+      <div>
+        <div class="footer-brand">IL MANO</div>
+        <p class="footer-tagline">
+          A dialogue between American iconography and modern tailoring.
+          Reimagined archetypes for a life with many dimensions.
+        </p>
+      </div>
+      <div>
+        <p class="footer-col-title">Legal</p>
+        <div class="footer-links">
+          <a href="#" class="footer-link">Terms &amp; Conditions</a>
+          <a href="#" class="footer-link">Legal &amp; Privacy</a>
+          <a href="#" class="footer-link">Accessibility</a>
+          <a href="#" class="footer-link">Cookie Policy</a>
+        </div>
+      </div>
+      <div>
+        <p class="footer-col-title">Support</p>
+        <div class="footer-links">
+          <a href="#" class="footer-link">Our Story</a>
+          <a href="#" class="footer-link">Shipping</a>
+          <a href="#" class="footer-link">Return Policy</a>
+          <a href="#" class="footer-link">Instagram</a>
+        </div>
+      </div>
+      <div>
+        <p class="footer-col-title">Newsletter</p>
+        <div class="newsletter-form">
+          <input class="newsletter-input" type="email" placeholder="Your email address" />
+          <button class="newsletter-submit">→</button>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 IL MANO</span>
+      <span>Los Angeles, CA</span>
+    </div>
+  </footer>
+
+  <script>
+    // ── NAV SCROLL STATE ──────────────────────────────────────────
+    const nav = document.getElementById('main-nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 40);
+    });
+
+    // ── SCROLL REVEAL ─────────────────────────────────────────────
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.08 });
+    reveals.forEach(el => observer.observe(el));
+
+    // ── COLOR SWATCH (detail page) ────────────────────────────────
+    function selectColor(el) {
+      document.querySelectorAll('#color-swatches .swatch-block').forEach(s => s.classList.remove('active'));
+      el.classList.add('active');
+      document.getElementById('selected-color').textContent = el.dataset.color;
+    }
+
+    // ── SIZE SELECTOR ─────────────────────────────────────────────
+    function selectSize(btn) {
+      document.querySelectorAll('.size-btn:not(.sold-out)').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    }
+
+    // ── PRODUCT CARD SWATCHES ─────────────────────────────────────
+    document.querySelectorAll('.product-swatches').forEach(row => {
+      row.querySelectorAll('.swatch-dot').forEach(dot => {
+        dot.addEventListener('click', (e) => {
+          e.stopPropagation();
+          row.querySelectorAll('.swatch-dot').forEach(d => d.classList.remove('active'));
+          dot.classList.add('active');
+          // ENGINEER NOTE: hook this up to swap product card image src
+          // e.g. cardImgWrap.querySelector('img').src = colorMap[dot.dataset.color]
+        });
+      });
+    });
+
+    // ── THUMBNAIL GALLERY ─────────────────────────────────────────
+    document.querySelectorAll('.thumb').forEach(thumb => {
+      thumb.addEventListener('click', () => {
+        document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
+        thumb.classList.add('active');
+        // ENGINEER NOTE: swap .main-img img src to thumb's img src here
+      });
+    });
+
+    // ── OPEN DETAIL (demo toggle) ─────────────────────────────────
+    // ENGINEER NOTE: Replace this with proper routing (separate page or
+    // a JS router) — this is just a demo show/hide for preview purposes
+    function openDetail() {
+      document.getElementById('product-detail').style.display = 'grid';
+      document.getElementById('product-detail').scrollIntoView({ behavior: 'smooth' });
+    }
+  </script>
+</body>
+</html>
