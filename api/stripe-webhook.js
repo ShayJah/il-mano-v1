@@ -13,6 +13,21 @@ function readRawBody(req) {
   });
 }
 
+function orderFromIntent(pi) {
+  return {
+    id: pi.id,
+    status: "authorized",
+    amount: pi.amount,
+    currency: pi.currency,
+    email: pi.receipt_email,
+    cart: pi.metadata?.cart ? JSON.parse(pi.metadata.cart) : [],
+    subtotal: Number(pi.metadata?.subtotal || 0),
+    shipping: Number(pi.metadata?.shipping || 0),
+    tax: Number(pi.metadata?.tax || 0),
+    createdAt: new Date().toISOString(),
+  };
+}
+
 module.exports = async (req, res) => {
   if (req.method !== "POST") {
     res.status(405).end();
@@ -31,27 +46,20 @@ module.exports = async (req, res) => {
     return;
   }
 
+  // Email first and independently of Redis, so a storage outage (or missing Upstash
+  // config) never swallows the order notification.
+  if (event.type === "payment_intent.amount_capturable_updated") {
+    await sendOrderConfirmation(orderFromIntent(event.data.object));
+  }
+
   try {
     const redis = getRedis();
 
     if (event.type === "payment_intent.amount_capturable_updated") {
       // Card authorized successfully — funds are held, not yet charged.
       const pi = event.data.object;
-      const order = {
-        id: pi.id,
-        status: "authorized",
-        amount: pi.amount,
-        currency: pi.currency,
-        email: pi.receipt_email,
-        cart: pi.metadata?.cart ? JSON.parse(pi.metadata.cart) : [],
-        subtotal: Number(pi.metadata?.subtotal || 0),
-        shipping: Number(pi.metadata?.shipping || 0),
-        tax: Number(pi.metadata?.tax || 0),
-        createdAt: new Date().toISOString(),
-      };
-      await redis.set(`order:${pi.id}`, order);
+      await redis.set(`order:${pi.id}`, orderFromIntent(pi));
       await redis.lpush("orders:authorized", pi.id);
-      await sendOrderConfirmation(order);
     }
 
     if (event.type === "payment_intent.canceled" || event.type === "payment_intent.payment_failed") {
