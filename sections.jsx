@@ -21,26 +21,56 @@ const PageLoader = ({ onDone }) => {
 };
 
 /* ─── Nav ──────────────────────────────────────────────────── */
+const NAV_LINKS = [
+  { href: "/#collection", label: "Clothing" },
+  { href: "/#story", label: "Our Story" },
+  { href: "/faq", label: "FAQ" },
+];
+
 const Nav = ({ cartCount, onOpenCart, transparent }) => {
   const y = useScrollY();
   const scrolled = y > 60;
   const solid = !transparent;
+  const [drawerOpen, setDrawerOpen] = React.useState(false);
+
+  React.useEffect(() => {
+    document.body.style.overflow = drawerOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [drawerOpen]);
+
   return (
-    <nav className={"nav" + (scrolled ? " scrolled" : "") + (solid ? " solid" : "")}>
-      <div className="nav__group nav__group--left">
-        <a href="#collection" className="nav__link">Clothing</a>
-        <a href="#" className="nav__link">Customs</a>
-        <a href="#story" className="nav__link">Our Story</a>
+    <>
+      <nav className={"nav" + (scrolled ? " scrolled" : "") + (solid ? " solid" : "")}>
+        <div className="nav__group nav__group--left">
+          {NAV_LINKS.map(l => (
+            <a key={l.label} href={l.href} className="nav__link">{l.label}</a>
+          ))}
+        </div>
+        <a href="/" className="nav__wordmark" data-screen-label="01 Home">IL MANO</a>
+        <div className="nav__group nav__group--right">
+          <a href="#" className="nav__link" onClick={(e)=>{e.preventDefault(); onOpenCart();}}>
+            <Icon name="bag" size={14}/> Bag <span className="nav__bag-count">({String(cartCount).padStart(2,"0")})</span>
+          </a>
+          <button className="nav__burger" aria-label="Menu" aria-expanded={drawerOpen}
+                  onClick={() => setDrawerOpen(v => !v)}>
+            <span/><span/>
+          </button>
+        </div>
+      </nav>
+
+      <div className={"nav-drawer" + (drawerOpen ? " is-open" : "")}>
+        <div className="nav-drawer__links">
+          {NAV_LINKS.map(l => (
+            <a key={l.label} href={l.href} onClick={() => setDrawerOpen(false)}>{l.label}</a>
+          ))}
+        </div>
+        <div className="nav-drawer__foot">
+          <a href="/shipping-returns" onClick={() => setDrawerOpen(false)}>Shipping &amp; Returns</a>
+          <a href="/terms" onClick={() => setDrawerOpen(false)}>Terms</a>
+          <a href="/privacy" onClick={() => setDrawerOpen(false)}>Privacy</a>
+        </div>
       </div>
-      <a href="#" className="nav__wordmark" data-screen-label="01 Home">IL MANO</a>
-      <div className="nav__group nav__group--right">
-        <a href="#" className="nav__link"><Icon name="search" size={14}/> Search</a>
-        <a href="#" className="nav__link"><Icon name="user" size={14}/> Account</a>
-        <a href="#" className="nav__link" onClick={(e)=>{e.preventDefault(); onOpenCart();}}>
-          <Icon name="bag" size={14}/> Bag <span className="nav__bag-count">({String(cartCount).padStart(2,"0")})</span>
-        </a>
-      </div>
-    </nav>
+    </>
   );
 };
 
@@ -375,38 +405,33 @@ const Footer = () => {
         <div className="footer__col">
           <h5>— Brand</h5>
           <ul>
-            <li><a href="#story">Our Story</a></li>
-            <li><a href="#">Lookbook</a></li>
-            <li><a href="#">Customs</a></li>
-            <li><a href="#">Press</a></li>
+            <li><a href="/#story">Our Story</a></li>
+            <li><a href="/faq">FAQ</a></li>
+            <li><a href="/code-of-conduct">Code of Conduct</a></li>
           </ul>
         </div>
         <div className="footer__col">
           <h5>— Support</h5>
           <ul>
-            <li><a href="#">Shipping</a></li>
-            <li><a href="#">Returns</a></li>
-            <li><a href="#">Size Guide</a></li>
-            <li><a href="#">Contact</a></li>
+            <li><a href="/shipping-returns">Shipping</a></li>
+            <li><a href="/shipping-returns#returns">Returns</a></li>
+            <li><a href="/faq#sizing">Size Guide</a></li>
+            <li><a href="mailto:hello@ilmano.com">Contact</a></li>
           </ul>
         </div>
         <div className="footer__col">
           <h5>— Region</h5>
           <ul>
-            <li><a href="#"><Icon name="globe" size={12}/> United States · USD</a></li>
-            <li><a href="#">English</a></li>
-            <li><a href="#">Instagram</a></li>
-            <li><a href="#">TikTok</a></li>
+            <li><Icon name="globe" size={12}/> United States · USD</li>
           </ul>
         </div>
       </div>
       <div className="footer__legal">
-        <div>© 2026 IL MANO · Manufactured in Los Angeles</div>
+        <div>© {new Date().getFullYear()} IL MANO · Manufactured in Los Angeles</div>
         <div className="footer__legal-group">
-          <a href="#">Terms</a>
-          <a href="#">Privacy</a>
-          <a href="#">Accessibility</a>
-          <a href="#">Cookies</a>
+          <a href="/terms">Terms</a>
+          <a href="/privacy">Privacy</a>
+          <a href="/code-of-conduct">Code of Conduct</a>
         </div>
       </div>
     </footer>

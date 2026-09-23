@@ -107,21 +107,15 @@ const Checkout = ({ open, onClose, items, findProduct, onComplete }) => {
     setError("");
     if (paying) return;
     if (method !== "card") {
-      // Mocked path for Apple/Google pay
-      setPaying(true);
-      await new Promise(r => setTimeout(r, 1400));
-      const ref = "ILM-" + Math.random().toString(36).slice(2, 8).toUpperCase();
-      setOrderRef(ref);
-      setStep(3);
-      setPaying(false);
-      onComplete && onComplete(ref);
+      setError("Apple Pay / Google Pay aren't available yet — please pay by card.");
       return;
     }
     if (!cardholder.trim()) { setError("Add the name on card."); return; }
     if (!stripeRef.current || !cardElementRef.current) { setError("Card field still loading…"); return; }
     setPaying(true);
     try {
-      const result = await stripeRef.current.createPaymentMethod({
+      // 1. Create the PaymentMethod (tokenize the card — never touches our server).
+      const pmResult = await stripeRef.current.createPaymentMethod({
         type: "card",
         card: cardElementRef.current,
         billing_details: {
@@ -138,22 +132,51 @@ const Checkout = ({ open, onClose, items, findProduct, onComplete }) => {
           },
         },
       });
-      if (result.error) {
-        setError(result.error.message || "Card was declined.");
+      if (pmResult.error) {
+        setError(pmResult.error.message || "Card was declined.");
         setPaying(false);
         return;
       }
-      // Real Stripe payment method id — frontend can't fully confirm without backend
-      const pmId = result.paymentMethod.id;
-      console.log("[IL MANO] Created Stripe PaymentMethod:", pmId);
-      // Simulate server confirmation latency
-      await new Promise(r => setTimeout(r, 900));
-      const ref = "ILM-" + Math.random().toString(36).slice(2, 8).toUpperCase();
-      setOrderRef(ref);
+
+      // 2. Ask our backend to create a PaymentIntent (server recomputes the total —
+      //    it never trusts a price from the browser).
+      const piRes = await fetch("/api/create-payment-intent", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          email: contact.email,
+          items: items.map(it => ({ productId: it.productId, colorId: it.colorId, sizeId: it.sizeId, qty: it.qty })),
+        }),
+      });
+      const piData = await piRes.json();
+      if (!piRes.ok) {
+        setError(piData.error || "Could not start payment. Please try again.");
+        setPaying(false);
+        return;
+      }
+
+      // 3. Confirm the PaymentIntent with the tokenized card — this authorizes the
+      //    card (places a hold) but does not capture funds yet.
+      const confirmResult = await stripeRef.current.confirmCardPayment(piData.clientSecret, {
+        payment_method: pmResult.paymentMethod.id,
+      });
+      if (confirmResult.error) {
+        setError(confirmResult.error.message || "Payment could not be confirmed.");
+        setPaying(false);
+        return;
+      }
+      const intent = confirmResult.paymentIntent;
+      if (intent.status !== "requires_capture" && intent.status !== "succeeded") {
+        setError("Payment is pending — please try again in a moment.");
+        setPaying(false);
+        return;
+      }
+
+      setOrderRef(intent.id);
       setStep(3);
-      onComplete && onComplete(ref, pmId);
+      onComplete && onComplete(intent.id, pmResult.paymentMethod.id);
     } catch (e) {
-      setError(e.message || "Something went wrong.");
+      setError(e.message || "Something went wrong. Please try again.");
     } finally {
       setPaying(false);
     }
@@ -190,9 +213,9 @@ const Checkout = ({ open, onClose, items, findProduct, onComplete }) => {
           <div className="checkout__success-mark">
             <Icon name="check" size={36} stroke={1.2}/>
           </div>
-          <div className="kinetic" style={{fontSize: 10, letterSpacing: '0.3em', color: 'var(--mid)'}}>Order Confirmed</div>
+          <div className="kinetic" style={{fontSize: 10, letterSpacing: '0.3em', color: 'var(--mid)'}}>Order Received</div>
           <h1>Thank you, <em style={{fontStyle:'italic'}}>{delivery.firstName || "friend"}</em>.</h1>
-          <p>Your pieces are being prepared in Los Angeles. A receipt and tracking link is on its way to {contact.email}.</p>
+          <p>Your card has been authorized and your order is being reviewed before it ships from Los Angeles. A confirmation is on its way to {contact.email}.</p>
           <div className="checkout__success-meta">
             <div><b>Order</b>{orderRef}</div>
             <div><b>Total</b>{fmtPrice(total)}</div>
@@ -262,12 +285,12 @@ const Checkout = ({ open, onClose, items, findProduct, onComplete }) => {
                 <div className="method-row">
                   {[
                     { id: "card", lbl: "Card" },
-                    { id: "apple", lbl: "Apple Pay" },
-                    { id: "google", lbl: "Google Pay" },
+                    { id: "apple", lbl: "Apple Pay · Soon" },
+                    { id: "google", lbl: "Google Pay · Soon" },
                   ].map(m => (
                     <div key={m.id}
-                         className={"method" + (method === m.id ? " is-active" : "")}
-                         onClick={() => setMethod(m.id)}>{m.lbl}</div>
+                         className={"method" + (method === m.id ? " is-active" : "") + (m.id !== "card" ? " is-disabled" : "")}
+                         onClick={() => m.id === "card" && setMethod(m.id)}>{m.lbl}</div>
                   ))}
                 </div>
 
@@ -286,7 +309,7 @@ const Checkout = ({ open, onClose, items, findProduct, onComplete }) => {
                       </div>
                     </div>
                     <p style={{fontFamily:'var(--font-mono)', fontSize: 10, letterSpacing:'0.18em', color:'var(--mid)', textTransform:'uppercase', marginTop: 18, display:'flex', alignItems:'center', gap: 8}}>
-                      <Icon name="lock" size={12}/> Tokenized by Stripe · Test mode · Try 4242 4242 4242 4242
+                      <Icon name="lock" size={12}/> Secured & tokenized by Stripe
                     </p>
                   </>
                 ) : (
