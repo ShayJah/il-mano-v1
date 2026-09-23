@@ -11,7 +11,13 @@ function orderConfirmationHtml(order) {
     </tr>`;
   }).join("");
 
-  return `
+  return `<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+  </head>
+  <body style="margin:0;background:#f2efe8;">
   <div style="font-family:Helvetica,Arial,sans-serif;max-width:480px;margin:0 auto;padding:32px 24px;color:#0a0a0a;">
     <div style="font-size:20px;letter-spacing:0.14em;text-transform:uppercase;margin-bottom:24px;">IL MANO</div>
     <p style="font-size:15px;line-height:1.6;">Thanks for your order — your card has been authorized and your pieces are being reviewed before they ship from Los Angeles. This is a confirmation, not a charge notice; you'll be charged when your order is prepared for shipment.</p>
@@ -25,7 +31,9 @@ function orderConfirmationHtml(order) {
       <tr style="font-weight:bold;color:#0a0a0a;"><td style="padding-top:8px;">Total</td><td style="text-align:right;padding-top:8px;">${fmt(order.amount)}</td></tr>
     </table>
     <p style="font-size:12px;color:#8c8780;margin-top:24px;">Order reference: ${order.id}<br/>Questions? Reply to this email or write hello@ilmano.com.</p>
-  </div>`;
+  </div>
+  </body>
+</html>`;
 }
 
 async function sendOrderConfirmation(order) {
