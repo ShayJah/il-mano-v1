@@ -20,11 +20,19 @@ module.exports = async (req, res) => {
   }
 
   try {
-    const { items, email, firstName } = req.body || {};
+    const { items, email, firstName, lastName, address, apt, city, state, postal, country } = req.body || {};
     if (!email || typeof email !== "string" || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
       res.status(400).json({ error: "A valid email is required." });
       return;
     }
+
+    const clip = (v, n) => (typeof v === "string" ? v.slice(0, n) : "");
+    const shipAddr = JSON.stringify({
+      fn: clip(firstName, 40), ln: clip(lastName, 40),
+      a1: clip(address, 80), a2: clip(apt, 40),
+      city: clip(city, 40), state: clip(state, 30),
+      postal: clip(postal, 20), country: clip(country, 40),
+    });
 
     const { subtotal, shipping, tax, total } = priceCart(items);
     if (total <= 0) {
@@ -44,7 +52,8 @@ module.exports = async (req, res) => {
         subtotal: String(subtotal),
         shipping: String(shipping),
         tax: String(tax),
-        firstName: typeof firstName === "string" ? firstName.slice(0, 60) : "",
+        firstName: clip(firstName, 60),
+        shipAddr,
       },
     });
 

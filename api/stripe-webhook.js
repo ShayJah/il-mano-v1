@@ -37,6 +37,22 @@ module.exports = async (req, res) => {
     if (event.type === "payment_intent.amount_capturable_updated") {
       // Card authorized successfully — funds are held, not yet charged.
       const pi = event.data.object;
+
+      let card = null;
+      if (pi.payment_method) {
+        try {
+          const pm = await stripe.paymentMethods.retrieve(pi.payment_method);
+          if (pm.card) card = { brand: pm.card.brand, last4: pm.card.last4 };
+        } catch (e) {
+          console.error("[stripe-webhook] could not retrieve payment method", e.message);
+        }
+      }
+
+      let shipping = null;
+      try {
+        shipping = pi.metadata?.shipAddr ? JSON.parse(pi.metadata.shipAddr) : null;
+      } catch (e) { /* leave null if malformed */ }
+
       const order = {
         id: pi.id,
         status: "authorized",
@@ -46,8 +62,11 @@ module.exports = async (req, res) => {
         firstName: pi.metadata?.firstName || "",
         cart: pi.metadata?.cart ? JSON.parse(pi.metadata.cart) : [],
         subtotal: Number(pi.metadata?.subtotal || 0),
-        shipping: Number(pi.metadata?.shipping || 0),
+        shippingCost: Number(pi.metadata?.shipping || 0),
         tax: Number(pi.metadata?.tax || 0),
+        shippingAddress: shipping,
+        card,
+        siteUrl: `https://${req.headers.host}`,
         createdAt: new Date().toISOString(),
       };
       await redis.set(`order:${pi.id}`, order);

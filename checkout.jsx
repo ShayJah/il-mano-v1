@@ -146,6 +146,13 @@ const Checkout = ({ open, onClose, items, findProduct, onComplete }) => {
         body: JSON.stringify({
           email: contact.email,
           firstName: delivery.firstName,
+          lastName: delivery.lastName,
+          address: delivery.address,
+          apt: delivery.apt,
+          city: delivery.city,
+          state: delivery.state,
+          postal: delivery.postal,
+          country: delivery.country,
           items: items.map(it => ({ productId: it.productId, colorId: it.colorId, sizeId: it.sizeId, qty: it.qty })),
         }),
       });

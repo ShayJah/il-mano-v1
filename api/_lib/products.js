@@ -13,6 +13,30 @@ const NAMES = {
   "bag-duffle": "Heritage Duffle",
 };
 
+const COLOR_NAMES = {
+  "hoodie-classic": { black: "Black", white: "Bone", blue: "Royal Blue", brown: "Tobacco" },
+  "cap-trail": { black: "Black", brown: "Saddle", white: "Bone" },
+  "bag-duffle": { saddle: "Saddle" },
+};
+
+// Mirrors the color->image mapping in data.js, for building absolute image URLs in emails.
+const IMAGES = {
+  "hoodie-classic": {
+    black: "assets/hoodie-black-front.webp",
+    white: "assets/hoodie-white-front.webp",
+    blue: "assets/hoodie-blue-front.webp",
+    brown: "assets/hoodie-brown-front.webp",
+  },
+  "cap-trail": {
+    black: "assets/cap-black.webp",
+    brown: "assets/cap-brown.webp",
+    white: "assets/cap-white.webp",
+  },
+  "bag-duffle": {
+    saddle: "assets/bag-duffle.png",
+  },
+};
+
 function priceCart(items) {
   if (!Array.isArray(items) || items.length === 0) {
     throw new Error("Cart is empty");
@@ -32,4 +56,4 @@ function priceCart(items) {
   return { subtotal, shipping, tax, total };
 }
 
-module.exports = { PRICES, NAMES, priceCart };
+module.exports = { PRICES, NAMES, COLOR_NAMES, IMAGES, priceCart };
