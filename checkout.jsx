@@ -145,6 +145,7 @@ const Checkout = ({ open, onClose, items, findProduct, onComplete }) => {
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
           email: contact.email,
+          firstName: delivery.firstName,
           items: items.map(it => ({ productId: it.productId, colorId: it.colorId, sizeId: it.sizeId, qty: it.qty })),
         }),
       });
