@@ -43,6 +43,7 @@ module.exports = async (req, res) => {
         amount: pi.amount,
         currency: pi.currency,
         email: pi.receipt_email,
+        firstName: pi.metadata?.firstName || "",
         cart: pi.metadata?.cart ? JSON.parse(pi.metadata.cart) : [],
         subtotal: Number(pi.metadata?.subtotal || 0),
         shipping: Number(pi.metadata?.shipping || 0),

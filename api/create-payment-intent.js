@@ -20,7 +20,7 @@ module.exports = async (req, res) => {
   }
 
   try {
-    const { items, email } = req.body || {};
+    const { items, email, firstName } = req.body || {};
     if (!email || typeof email !== "string" || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
       res.status(400).json({ error: "A valid email is required." });
       return;
@@ -44,6 +44,7 @@ module.exports = async (req, res) => {
         subtotal: String(subtotal),
         shipping: String(shipping),
         tax: String(tax),
+        firstName: typeof firstName === "string" ? firstName.slice(0, 60) : "",
       },
     });
 
