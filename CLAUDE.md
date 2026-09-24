@@ -1,5 +1,9 @@
 # IL MANO — project context for Claude Code
 
+See `WORKFLOW.md` for how this project is worked day-to-day across Mac (real work) and
+iPhone via Remote Control (monitor + approve only) — read it if the user is asking
+about cross-device setup, push notifications, or seems to be working from their phone.
+
 E-commerce storefront for IL MANO (LA-made clothing). Read this before doing anything
 in this repo — it captures decisions, gotchas, and open items from the initial
 ship-tonight build so you don't have to re-derive them.
