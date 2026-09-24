@@ -13,6 +13,40 @@ function readRawBody(req) {
   });
 }
 
+async function orderFromIntent(pi, { stripe, siteUrl }) {
+  let card = null;
+  if (pi.payment_method) {
+    try {
+      const pm = await stripe.paymentMethods.retrieve(pi.payment_method);
+      if (pm.card) card = { brand: pm.card.brand, last4: pm.card.last4 };
+    } catch (e) {
+      console.error("[stripe-webhook] could not retrieve payment method", e.message);
+    }
+  }
+
+  let shippingAddress = null;
+  try {
+    shippingAddress = pi.metadata?.shipAddr ? JSON.parse(pi.metadata.shipAddr) : null;
+  } catch (e) { /* leave null if malformed */ }
+
+  return {
+    id: pi.id,
+    status: "authorized",
+    amount: pi.amount,
+    currency: pi.currency,
+    email: pi.receipt_email,
+    firstName: pi.metadata?.firstName || "",
+    cart: pi.metadata?.cart ? JSON.parse(pi.metadata.cart) : [],
+    subtotal: Number(pi.metadata?.subtotal || 0),
+    shipping: Number(pi.metadata?.shipping || 0),
+    tax: Number(pi.metadata?.tax || 0),
+    shippingAddress,
+    card,
+    siteUrl,
+    createdAt: new Date().toISOString(),
+  };
+}
+
 module.exports = async (req, res) => {
   if (req.method !== "POST") {
     res.status(405).end();
@@ -31,47 +65,22 @@ module.exports = async (req, res) => {
     return;
   }
 
+  const siteUrl = `https://${req.headers.host}`;
+  let order = null;
+  if (event.type === "payment_intent.amount_capturable_updated") {
+    order = await orderFromIntent(event.data.object, { stripe, siteUrl });
+    // Email first and independently of Redis, so a storage outage (or missing Upstash
+    // config) never swallows the order notification.
+    await sendOrderConfirmation(order);
+  }
+
   try {
     const redis = getRedis();
 
     if (event.type === "payment_intent.amount_capturable_updated") {
       // Card authorized successfully — funds are held, not yet charged.
-      const pi = event.data.object;
-
-      let card = null;
-      if (pi.payment_method) {
-        try {
-          const pm = await stripe.paymentMethods.retrieve(pi.payment_method);
-          if (pm.card) card = { brand: pm.card.brand, last4: pm.card.last4 };
-        } catch (e) {
-          console.error("[stripe-webhook] could not retrieve payment method", e.message);
-        }
-      }
-
-      let shipping = null;
-      try {
-        shipping = pi.metadata?.shipAddr ? JSON.parse(pi.metadata.shipAddr) : null;
-      } catch (e) { /* leave null if malformed */ }
-
-      const order = {
-        id: pi.id,
-        status: "authorized",
-        amount: pi.amount,
-        currency: pi.currency,
-        email: pi.receipt_email,
-        firstName: pi.metadata?.firstName || "",
-        cart: pi.metadata?.cart ? JSON.parse(pi.metadata.cart) : [],
-        subtotal: Number(pi.metadata?.subtotal || 0),
-        shippingCost: Number(pi.metadata?.shipping || 0),
-        tax: Number(pi.metadata?.tax || 0),
-        shippingAddress: shipping,
-        card,
-        siteUrl: `https://${req.headers.host}`,
-        createdAt: new Date().toISOString(),
-      };
-      await redis.set(`order:${pi.id}`, order);
-      await redis.lpush("orders:authorized", pi.id);
-      await sendOrderConfirmation(order);
+      await redis.set(`order:${order.id}`, order);
+      await redis.lpush("orders:authorized", order.id);
     }
 
     if (event.type === "payment_intent.canceled" || event.type === "payment_intent.payment_failed") {

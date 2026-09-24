@@ -121,7 +121,7 @@ function orderConfirmationHtml(order) {
               </table>
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
                 ${totalRow("Subtotal", order.subtotal * 100 || 0)}
-                ${totalRow("Shipping", order.shippingCost * 100 || 0)}
+                ${totalRow("Shipping", order.shipping * 100 || 0)}
                 ${totalRow("Tax", order.tax * 100 || 0)}
                 ${totalRow("Total authorized", order.amount, true)}
               </table>
@@ -207,18 +207,22 @@ function orderConfirmationHtml(order) {
 
 async function sendOrderConfirmation(order) {
   const resend = getResend();
-  if (!resend || !order.email) return;
-  try {
-    await resend.emails.send({
-      from: process.env.ORDER_EMAIL_FROM || "IL MANO <onboarding@resend.dev>",
-      to: order.email,
-      subject: "We've got your order — IL MANO",
-      html: orderConfirmationHtml(order),
-    });
-  } catch (e) {
-    // Never let an email failure break order processing — it's already saved in Redis.
-    console.error("[email] order confirmation failed", e);
-  }
+  // ORDER_NOTIFY_EMAIL routes every confirmation to one inbox (e.g. the store owner)
+  // instead of the customer — needed while sending from onboarding@resend.dev, which
+  // only delivers to the Resend account's own address.
+  const to = process.env.ORDER_NOTIFY_EMAIL || order.email;
+  if (!resend || !to) return;
+  const { error } = await resend.emails.send({
+    from: process.env.ORDER_EMAIL_FROM || "IL MANO <onboarding@resend.dev>",
+    to,
+    replyTo: order.email || undefined,
+    subject: process.env.ORDER_NOTIFY_EMAIL
+      ? `New order from ${order.email || "unknown"} — IL MANO`
+      : "We've got your order — IL MANO",
+    html: orderConfirmationHtml(order),
+  }).catch((e) => ({ error: e }));
+  // Never let an email failure break order processing — just log it.
+  if (error) console.error("[email] order confirmation failed", error);
 }
 
 module.exports = { sendOrderConfirmation, orderConfirmationHtml };
