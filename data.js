@@ -16,10 +16,10 @@
       description:
         "Inspired by the weathered textures of the American West and refined for the urban landscape. Crafted from premium 100% French Terry and finished with a specialized LA-dye process to achieve a soft, lived-in patina from the first wear. A rebellious take on luxury basics — built to age beautifully and endure the grind.",
       colors: [
-        { id: "black",  name: "Black",      hex: "#0e0e0e", front: A + "hoodie-black-front.webp",  back: A + "hoodie-black-back.webp"  },
-        { id: "white",  name: "Bone",       hex: "#efeadd", front: A + "hoodie-white-front.webp",  back: A + "hoodie-white-back.webp"  },
-        { id: "blue",   name: "Royal Blue", hex: "#1f3a8a", front: A + "hoodie-blue-front.webp",   back: A + "hoodie-blue-back.webp"   },
-        { id: "brown",  name: "Tobacco",    hex: "#6b4a2b", front: A + "hoodie-brown-front.webp",  back: A + "hoodie-brown-back.webp"  },
+        { id: "black",  name: "Vanta Black",      hex: "#0e0e0e", front: A + "hoodie-black-front.webp",  back: A + "hoodie-black-back.webp"  },
+        { id: "white",  name: "Bone White",       hex: "#efeadd", front: A + "hoodie-white-front.webp",  back: A + "hoodie-white-back.webp"  },
+        { id: "blue",   name: "Electric Blue", hex: "#1f3a8a", front: A + "hoodie-blue-front.webp",   back: A + "hoodie-blue-back.webp"   },
+        { id: "brown",  name: "Cabalo Brown",    hex: "#6b4a2b", front: A + "hoodie-brown-front.webp",  back: A + "hoodie-brown-back.webp"  },
       ],
       defaultColor: "black",
       sizes: [
@@ -50,11 +50,11 @@
       rating: 4.8,
       reviews: 64,
       description:
-        "Six-panel structured trucker with a hand-finished cowhide patch debossed with the ILMANO mark. Snap-back fits a wide range; perforated mesh keeps the back cool through the Mojave summer.",
+        "Six-panel structured trucker with a hand-finished cowhide patch debossed with the ILMANO mark. Snap back fits a wide range; perforated mesh keeps the back cool through the Mojave summer.",
       colors: [
-        { id: "black", name: "Black",  hex: "#0e0e0e", front: A + "cap-black.webp", back: A + "cap-black.webp" },
-        { id: "brown", name: "Saddle", hex: "#6b4a2b", front: A + "cap-brown.webp", back: A + "cap-brown.webp" },
-        { id: "white", name: "Bone",   hex: "#efeadd", front: A + "cap-white.webp", back: A + "cap-white.webp" },
+        { id: "black", name: "Vanta Black",  hex: "#0e0e0e", front: A + "cap-black.webp", back: A + "cap-black.webp" },
+        { id: "brown", name: "Cabalo Brown", hex: "#6b4a2b", front: A + "cap-brown.webp", back: A + "cap-brown.webp" },
+        { id: "white", name: "Bone White",   hex: "#efeadd", front: A + "cap-white.webp", back: A + "cap-white.webp" },
       ],
       defaultColor: "black",
       sizes: [{ id: "os", label: "One Size", soldOut: false }],
@@ -113,7 +113,7 @@
     { num: "02", name: "T-Shirts", img: A + "hoodie-white-front.webp", size: "md", count: "8 pieces"  },
     { num: "03", name: "Hats",     img: A + "cap-brown.webp",          size: "sm", count: "5 pieces"  },
     { num: "04", name: "Bags",     img: A + "bag-duffle.png",          size: "sm", count: "3 pieces"  },
-    { num: "05", name: "Customs",  img: A + "brand-tags.webp",         size: "sm", count: "Bespoke"   },
+    { num: "05", name: "Gallery",  img: A + "brand-tags.webp",         size: "sm", count: "Bespoke"   },
   ];
 
   const marqueeItems = [
@@ -121,7 +121,7 @@
     "Manufactured in Los Angeles",
     "Connect · Create · Inspire",
     "American Iconography",
-    "Hand-finished",
+    "Hand finished",
     "Made to Endure",
   ];
 

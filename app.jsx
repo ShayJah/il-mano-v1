@@ -10,7 +10,7 @@ const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
 
 const App = () => {
   const data = window.IL_MANO_DATA;
-  const [loaded, setLoaded] = React.useState(false);
+  const loaded = true; // intro loader now lives in index.html (see intro script)
   const [pdp, setPdp] = React.useState(null); // {product, colorId}
   const [cartOpen, setCartOpen] = React.useState(false);
   const [checkoutOpen, setCheckoutOpen] = React.useState(false);
@@ -179,9 +179,9 @@ const App = () => {
 
   return (
     <>
-      {!loaded && <PageLoader onDone={() => setLoaded(true)} />}
-
-      <Nav cartCount={totalQty} onOpenCart={() => setCartOpen(true)} transparent={false} />
+      <CookieNotice />
+      <NewsletterSlideIn />
+      <Nav cartCount={totalQty} onOpenCart={() => setCartOpen(true)} transparent={false} hideUntilScroll />
 
       <main>
         <Hero />

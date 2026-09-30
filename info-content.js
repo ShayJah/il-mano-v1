@@ -82,6 +82,11 @@ window.IL_MANO_PAGES = {
         body: "We share order data with Stripe (payment processing) and shipping carriers (delivery) as needed to fulfill your order. We do not sell your personal information.",
       },
       {
+        heading: "Cookies",
+        id: "cookies",
+        body: "We use only essential cookies and browser storage: a one-time intro-animation flag and a notice-dismissed flag on this site, and cookies set by Stripe to process payments securely and prevent fraud. We do not use advertising, analytics, or cross-site tracking cookies. Our pages load fonts from Google Fonts, which means your IP address is sent to Google when you visit.",
+      },
+      {
         heading: "Your choices",
         body: "You can unsubscribe from marketing emails at any time via the link in any email, or by contacting hello@ilmano.com. To request deletion of your data, email us and we'll respond within a reasonable timeframe.",
       },

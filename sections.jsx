@@ -1,22 +1,25 @@
-/* ─── Page Loader ──────────────────────────────────────────── */
-const PageLoader = ({ onDone }) => {
-  const [exiting, setExiting] = React.useState(false);
-  React.useEffect(() => {
-    const t = setTimeout(() => setExiting(true), 1600);
-    const t2 = setTimeout(() => onDone && onDone(), 2550);
-    return () => { clearTimeout(t); clearTimeout(t2); };
-  }, []);
+/* ─── Cookie notice ────────────────────────────────────────── */
+/* Informational only: the site sets no analytics/advertising cookies. If any are
+   ever added (GA, Meta Pixel, etc.) this must become a real opt-in consent banner. */
+const COOKIE_KEY = "ilmano-cookie-notice";
+const CookieNotice = () => {
+  const [open, setOpen] = React.useState(() => {
+    try { return !localStorage.getItem(COOKIE_KEY); } catch (e) { return true; }
+  });
+  if (!open) return null;
+  const dismiss = () => {
+    try { localStorage.setItem(COOKIE_KEY, "1"); } catch (e) {}
+    setOpen(false);
+  };
   return (
-    <div className={"page-loader" + (exiting ? " exiting" : "")}>
-      <div className="page-loader__inner">
-        <IlManoMark height={32} color="#f5f4f0" />
-        <div className="page-loader__bar"></div>
-        <div className="page-loader__meta">
-          <span>Summer 2026</span>
-          <span>Los Angeles</span>
-        </div>
-      </div>
-    </div>
+    <aside className="cookie-notice" role="region" aria-label="Cookie notice">
+      <div className="cookie-notice__eyebrow">— Cookies</div>
+      <p>
+        We use only essential cookies and storage — for secure checkout (via Stripe).
+        No advertising, no tracking. <a href="/privacy#cookies">Details</a>
+      </p>
+      <button className="cookie-notice__btn" onClick={dismiss}>Understood</button>
+    </aside>
   );
 };
 
@@ -27,7 +30,7 @@ const NAV_LINKS = [
   { href: "/faq", label: "FAQ" },
 ];
 
-const Nav = ({ cartCount, onOpenCart, transparent }) => {
+const Nav = ({ cartCount, onOpenCart, transparent, hideUntilScroll }) => {
   const y = useScrollY();
   const scrolled = y > 60;
   const solid = !transparent;
@@ -40,7 +43,7 @@ const Nav = ({ cartCount, onOpenCart, transparent }) => {
 
   return (
     <>
-      <nav className={"nav" + (scrolled ? " scrolled" : "") + (solid ? " solid" : "")}>
+      <nav className={"nav" + (scrolled ? " scrolled" : "") + (solid ? " solid" : "") + (hideUntilScroll && !scrolled && !drawerOpen ? " nav--hidden" : "")}>
         <div className="nav__group nav__group--left">
           {NAV_LINKS.map(l => (
             <a key={l.label} href={l.href} className="nav__link">{l.label}</a>
@@ -79,7 +82,7 @@ const Hero = () => {
   return (
     <section className="hero" data-screen-label="Hero">
       <div className="hero__media">
-        <img src="assets/hero-palms.jpg" alt="Summer 2026 — California iconography" />
+        <img src="assets/0619-0957_losangeles.jpg" alt="Summer 2026 — California iconography" />
       </div>
       <div className="hero__veil" />
       <div className="hero__inner">
@@ -93,7 +96,7 @@ const Hero = () => {
             <span className="line"><span><em>Iconography.</em></span></span>
           </h1>
           <div className="hero__meta">
-            <p>A dialogue between American iconography and modern tailoring — reimagined archetypes for a life with many dimensions.</p>
+            <p>At Il Mano Gallery, we envision a world where art, fashion, and philanthropy come together to inspire connection, creativity, and meaningful change.</p>
             <a href="#collection" className="hero__cta" data-magnet>
               Shop the Collection
               <span className="arrow"><Icon name="arrow-right" size={14}/></span>
@@ -384,23 +387,107 @@ const Story = ({ pillars }) => {
   );
 };
 
+/* ─── Newsletter ───────────────────────────────────────────── */
+const useNewsletter = (source) => {
+  const [email, setEmail] = React.useState("");
+  const [status, setStatus] = React.useState("idle"); // idle | sending | done | error
+  const [error, setError] = React.useState("");
+  const submit = async (e) => {
+    e.preventDefault();
+    if (!email || status === "sending") return;
+    setStatus("sending");
+    try {
+      const r = await fetch("/api/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, source }),
+      });
+      const j = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(j.error || "Something went wrong.");
+      try { localStorage.setItem(NEWS_KEY, "joined"); } catch (e) {}
+      setStatus("done");
+    } catch (err) {
+      setError(err.message || "Something went wrong.");
+      setStatus("error");
+    }
+  };
+  return { email, setEmail, status, error, submit };
+};
+
+/* Low-key slide-in: appears ~20s after landing, once, bottom-right. Waits for the
+   cookie notice to be dismissed so the two never stack. Dismissal is remembered
+   for 30 days; a signup is remembered permanently. */
+const NEWS_KEY = "ilmano-newsletter";
+const NEWS_DELAY_MS = 20000;
+const NEWS_SNOOZE_MS = 30 * 24 * 60 * 60 * 1000;
+const NewsletterSlideIn = () => {
+  const [open, setOpen] = React.useState(false);
+  const news = useNewsletter("slide-in");
+  React.useEffect(() => {
+    try {
+      const v = localStorage.getItem(NEWS_KEY);
+      if (v === "joined") return;
+      if (v && Date.now() - Number(v) < NEWS_SNOOZE_MS) return;
+    } catch (e) {}
+    let timer;
+    const arm = () => { timer = setTimeout(() => {
+      // hold off while the cookie notice is still on screen
+      if (document.querySelector(".cookie-notice")) arm(); else setOpen(true);
+    }, NEWS_DELAY_MS); };
+    arm();
+    return () => clearTimeout(timer);
+  }, []);
+  const close = () => {
+    if (news.status !== "done") { try { localStorage.setItem(NEWS_KEY, String(Date.now())); } catch (e) {} }
+    setOpen(false);
+  };
+  React.useEffect(() => {
+    if (news.status !== "done") return;
+    const t = setTimeout(() => setOpen(false), 2600);
+    return () => clearTimeout(t);
+  }, [news.status]);
+  if (!open) return null;
+  return (
+    <aside className="news-slide" role="region" aria-label="Newsletter">
+      <button className="news-slide__close" onClick={close} aria-label="Close">×</button>
+      <div className="news-slide__eyebrow">— Newsletter</div>
+      {news.status === "done" ? (
+        <p className="news-slide__title">You're on the list.</p>
+      ) : (
+        <>
+          <p className="news-slide__title">First access to new drops.</p>
+          <form className="news-slide__form" onSubmit={news.submit}>
+            <input type="email" placeholder="Email address" aria-label="Email address"
+                   value={news.email} onChange={(e)=>news.setEmail(e.target.value)} required />
+            <button type="submit" disabled={news.status === "sending"}>
+              {news.status === "sending" ? "…" : "Join →"}
+            </button>
+          </form>
+          {news.status === "error" && <p className="newsletter__msg">{news.error}</p>}
+        </>
+      )}
+    </aside>
+  );
+};
+
 /* ─── Footer ───────────────────────────────────────────────── */
 const Footer = () => {
-  const [email, setEmail] = React.useState("");
-  const [subbed, setSubbed] = React.useState(false);
+  const news = useNewsletter("footer");
   return (
     <footer className="footer">
       <div className="footer__megabrand">IL MANO</div>
       <div className="footer__grid">
         <div className="footer__col">
           <p className="footer__tagline"><em>A dialogue between American iconography and modern tailoring.</em></p>
-          <div className="newsletter">
-            <input type="email" placeholder="Your email address"
-                   value={email} onChange={(e)=>setEmail(e.target.value)} />
-            <button onClick={()=> email && setSubbed(true)}>
-              {subbed ? "Joined ✓" : "Subscribe →"}
+          <form className="newsletter" onSubmit={news.submit}>
+            <input type="email" placeholder="Email — first access to drops" aria-label="Email address"
+                   value={news.email} onChange={(e)=>news.setEmail(e.target.value)}
+                   disabled={news.status === "done"} required />
+            <button type="submit" disabled={news.status === "sending"}>
+              {news.status === "done" ? "Joined ✓" : news.status === "sending" ? "…" : "Subscribe →"}
             </button>
-          </div>
+          </form>
+          {news.status === "error" && <p className="newsletter__msg">{news.error}</p>}
         </div>
         <div className="footer__col">
           <h5>— Brand</h5>
@@ -439,6 +526,6 @@ const Footer = () => {
 };
 
 Object.assign(window, {
-  PageLoader, Nav, Hero, Marquee, Categories,
+  Nav, CookieNotice, NewsletterSlideIn, Hero, Marquee, Categories,
   ProductCard, Collection, Lookbook, Story, Footer,
 });

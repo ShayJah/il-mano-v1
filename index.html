@@ -11,11 +11,61 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="preconnect" href="https://js.stripe.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Inter+Tight:wght@300;350;400;500;600&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Inter+Tight:wght@300;350;400;500;600&family=JetBrains+Mono:wght@300;400;500&family=DM+Mono:wght@400&display=swap" rel="stylesheet" />
 
+  <link rel="preload" as="image" href="assets/hero-palms.jpg" />
   <link rel="stylesheet" href="styles.css" />
+
+  <!-- Intro sequence: first visit per session only. Adds html.intro (loader + hidden hero
+       states), holds the curtain until fonts + hero image decoded + hero mounted, then
+       starts the timeline (html.intro-run), hero reveal (.intro-hero) and unlocks scroll. -->
+  <script>
+  (function () {
+    var d = document.documentElement;
+    try {
+      if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      if (location.hash) return;
+      if (sessionStorage.getItem("ilmano-intro")) return;
+      sessionStorage.setItem("ilmano-intro", "1");
+    } catch (e) {}
+    d.classList.add("intro");
+    var started = false, noop = function () {};
+    function go() {
+      if (started) return; started = true;
+      d.classList.add("intro-run");
+      setTimeout(function () { d.classList.add("intro-hero"); }, 1950);
+      setTimeout(function () {
+        d.classList.add("intro-done");
+        var l = document.getElementById("intro-loader");
+        if (l) l.remove();
+      }, 4500);
+    }
+    var img = new Image();
+    img.src = "assets/hero-palms.jpg";
+    var imgReady = img.decode ? img.decode().catch(noop)
+      : new Promise(function (r) { img.onload = img.onerror = r; });
+    var fontsReady = document.fonts
+      ? Promise.all([document.fonts.load('400 64px "Cormorant Garamond"'),
+                     document.fonts.load('400 11px "DM Mono"')]).catch(noop)
+      : Promise.resolve();
+    var mounted = new Promise(function (r) {
+      (function poll() {
+        if (document.querySelector(".hero__media img")) r(); else setTimeout(poll, 40);
+      })();
+    });
+    Promise.all([imgReady, fontsReady, mounted]).then(go);
+    setTimeout(go, 8000); // never hold the curtain forever
+  })();
+  </script>
 </head>
 <body data-surface="">
+  <div id="intro-loader" class="intro-loader" aria-hidden="true">
+    <div class="intro-loader__group">
+      <div class="intro-loader__word"><span class="l"><i>I</i></span><span class="l"><i>L</i></span><span class="gap"></span><span class="l"><i>M</i></span><span class="l"><i>A</i></span><span class="l"><i>N</i></span><span class="l"><i>O</i></span></div>
+      <div class="intro-loader__rule"></div>
+      <div class="intro-loader__tag">Summer · 2026 — Los Angeles</div>
+    </div>
+  </div>
   <div id="root"></div>
 
   <!-- Stripe.js (real Elements; tokenizes card with publishable key) -->

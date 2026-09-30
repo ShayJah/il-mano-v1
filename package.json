@@ -4,7 +4,7 @@
   "private": true,
   "description": "IL MANO storefront (static frontend) + Vercel serverless order backend",
   "scripts": {
-    "dev": "vercel dev"
+    "local": "vercel dev"
   },
   "dependencies": {
     "@upstash/ratelimit": "^2.0.5",
