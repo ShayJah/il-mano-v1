@@ -109,11 +109,11 @@
   ];
 
   const categories = [
-    { num: "01", name: "Hoodies",  img: A + "hoodie-black-back.webp",  size: "lg", count: "12 pieces" },
-    { num: "02", name: "T-Shirts", img: A + "hoodie-white-front.webp", size: "md", count: "8 pieces"  },
-    { num: "03", name: "Hats",     img: A + "cap-brown.webp",          size: "sm", count: "5 pieces"  },
-    { num: "04", name: "Bags",     img: A + "bag-duffle.png",          size: "sm", count: "3 pieces"  },
-    { num: "05", name: "Gallery",  img: A + "brand-tags.webp",         size: "sm", count: "Bespoke"   },
+    { num: "01", name: "Hoodies",  key: "hoodies", img: A + "hoodie-black-back.webp",  size: "lg", count: "12 pieces" },
+    { num: "02", name: "T-Shirts", key: "t-shirts", img: A + "hoodie-white-front.webp", size: "md", count: "8 pieces"  },
+    { num: "03", name: "Hats", key: "hats",     img: A + "cap-brown.webp",          size: "sm", count: "5 pieces"  },
+    { num: "04", name: "Bags", key: "bags",     img: A + "bag-duffle.png",          size: "sm", count: "3 pieces"  },
+    { num: "05", name: "Gallery",  key: "gallery", img: A + "brand-tags.webp",         size: "sm", count: "Bespoke"   },
   ];
 
   const marqueeItems = [

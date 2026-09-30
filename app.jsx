@@ -11,6 +11,7 @@ const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
 const App = () => {
   const data = window.IL_MANO_DATA;
   const loaded = true; // intro loader now lives in index.html (see intro script)
+  const [filter, setFilter] = React.useState("all"); // collection category filter
   const [pdp, setPdp] = React.useState(null); // {product, colorId}
   const [cartOpen, setCartOpen] = React.useState(false);
   const [checkoutOpen, setCheckoutOpen] = React.useState(false);
@@ -185,11 +186,17 @@ const App = () => {
 
       <main>
         <Hero />
-        <Marquee items={data.marqueeItems} />
+        <div className="hero-fade" aria-hidden />
         <Categories categories={data.categories} onPickCategory={(c) => {
+          setFilter(c ? c.key : "all");
+          // A category with a product opens straight into its product view;
+          // "Browse all" / empty categories (no product yet) scroll to the collection.
+          if (c && c.key === "gallery") { window.location.href = "/gallery"; return; }
+          const product = c && data.products.find(p => p.categoryKey === c.key);
+          if (product) { openPdp(product); return; }
           document.getElementById("collection")?.scrollIntoView({ behavior: "smooth" });
         }} />
-        <Collection data={data} onOpen={openPdp} onQuickAdd={quickAdd}
+        <Collection data={data} filter={filter} setFilter={setFilter} onOpen={openPdp} onQuickAdd={quickAdd}
                     wishlist={wishlist} toggleWish={toggleWish} />
         <Lookbook />
         <Story pillars={data.storyPillars} />

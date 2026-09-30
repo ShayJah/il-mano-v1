@@ -67,7 +67,7 @@ window.IL_MANO_PAGES = {
   privacy: {
     eyebrow: "Legal",
     title: "Privacy <em>policy.</em>",
-    intro: "Last updated " + new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" }) + ". This is a starter policy — have it reviewed by counsel before relying on it at scale.",
+    intro: "Last updated September 30, 2026. This is a starter policy — have it reviewed by counsel before relying on it at scale.",
     sections: [
       {
         heading: "What we collect",
@@ -78,13 +78,18 @@ window.IL_MANO_PAGES = {
         body: "We use your information to process and ship your order, send order-related communications, and — only if you opt in — send you updates about new drops and restocks.",
       },
       {
+        heading: "Newsletter",
+        id: "newsletter",
+        body: "If you subscribe to our newsletter (in the site footer or the sign-up prompt), we collect your email address and record when and where you signed up. We use it only to send you news about drops, restocks and IL MANO releases. Subscribing is optional and separate from placing an order. You can unsubscribe at any time via the link in any email or by contacting hello@ilmano.com, and we'll remove your address on request.",
+      },
+      {
         heading: "Third parties",
-        body: "We share order data with Stripe (payment processing) and shipping carriers (delivery) as needed to fulfill your order. We do not sell your personal information.",
+        body: "We share order data with Stripe (payment processing) and shipping carriers (delivery) as needed to fulfill your order. We store order and newsletter data with service providers that host our infrastructure (Vercel, Upstash) and send email on our behalf (Resend). We do not sell your personal information.",
       },
       {
         heading: "Cookies",
         id: "cookies",
-        body: "We use only essential cookies and browser storage: a one-time intro-animation flag and a notice-dismissed flag on this site, and cookies set by Stripe to process payments securely and prevent fraud. We do not use advertising, analytics, or cross-site tracking cookies. Our pages load fonts from Google Fonts, which means your IP address is sent to Google when you visit.",
+        body: "We use only essential cookies and browser storage: a one-time intro-animation flag, a notice-dismissed flag and a newsletter-prompt-dismissed flag on this site, and cookies set by Stripe to process payments securely and prevent fraud. We do not use advertising, analytics, or cross-site tracking cookies. Our pages load fonts from Google Fonts, which means your IP address is sent to Google when you visit.",
       },
       {
         heading: "Your choices",

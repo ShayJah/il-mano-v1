@@ -26,7 +26,8 @@ const CookieNotice = () => {
 /* ─── Nav ──────────────────────────────────────────────────── */
 const NAV_LINKS = [
   { href: "/#collection", label: "Clothing" },
-  { href: "/#story", label: "Our Story" },
+  { href: "/gallery", label: "Gallery" },
+  { href: "/our-story", label: "Our Story" },
   { href: "/faq", label: "FAQ" },
 ];
 
@@ -103,60 +104,8 @@ const Hero = () => {
             </a>
           </div>
         </div>
-        <div className="hero__scroll">
-          <span>Scroll</span>
-          <div className="hero__scroll-line" />
-        </div>
       </div>
     </section>
-  );
-};
-
-/* ─── Marquee strip ────────────────────────────────────────── */
-const Marquee = ({ items }) => {
-  const trackRef = React.useRef(null);
-  const xRef = React.useRef(0);
-  const velRef = React.useRef(0.5);
-  const lastScrollRef = React.useRef(0);
-
-  React.useEffect(() => {
-    let raf;
-    const onScroll = () => {
-      const dy = Math.abs(window.scrollY - lastScrollRef.current);
-      lastScrollRef.current = window.scrollY;
-      velRef.current = Math.min(2.8, 0.5 + dy * 0.04);
-    };
-    const tick = () => {
-      const el = trackRef.current;
-      if (el) {
-        xRef.current -= velRef.current;
-        const half = el.scrollWidth / 2;
-        if (-xRef.current >= half) xRef.current += half;
-        el.style.transform = `translateX(${xRef.current}px)`;
-        velRef.current = velRef.current * 0.93 + 0.5 * 0.07;
-      }
-      raf = requestAnimationFrame(tick);
-    };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    raf = requestAnimationFrame(tick);
-    return () => {
-      cancelAnimationFrame(raf);
-      window.removeEventListener("scroll", onScroll);
-    };
-  }, []);
-
-  const doubled = [...items, ...items, ...items];
-  return (
-    <div className="marquee" aria-hidden>
-      <div className="marquee__track" ref={trackRef}>
-        {doubled.map((t, i) => (
-          <span className="marquee__item" key={i}>
-            {t}
-            <span className="marquee__dot" />
-          </span>
-        ))}
-      </div>
-    </div>
   );
 };
 
@@ -176,12 +125,14 @@ const Categories = ({ categories, onPickCategory }) => {
           <div className="section__index">Index 01 · Categories</div>
           <h2 className="section__title">The <em>archetypes</em> of summer.</h2>
         </div>
-        <a href="#collection" className="section__action">Browse all <Icon name="arrow-up-right" size={12}/></a>
+        <a href="#collection" className="section__action" onClick={() => onPickCategory && onPickCategory(null)}>Browse all <Icon name="arrow-up-right" size={12}/></a>
       </header>
       <div className="categories__grid">
         {categories.map((c, i) => (
           <div className={"cat cat--" + layoutCols(i, categories.length)} key={c.name}
-               onClick={() => onPickCategory && onPickCategory(c)}>
+               role="button" tabIndex={0}
+               onClick={() => onPickCategory && onPickCategory(c)}
+               onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onPickCategory && onPickCategory(c); } }}>
             <img className="cat__img" src={c.img} alt={c.name} loading="lazy" />
             <div className="cat__overlay" />
             <div className="cat__arrow"><Icon name="arrow-up-right" size={14}/></div>
@@ -252,14 +203,11 @@ const ProductCard = ({ entry, products, onOpen, onQuickAdd, wishlist, toggleWish
 };
 
 /* ─── Collection ───────────────────────────────────────────── */
-const Collection = ({ data, onOpen, onQuickAdd, wishlist, toggleWish }) => {
+const Collection = ({ data, filter, setFilter, onOpen, onQuickAdd, wishlist, toggleWish }) => {
   const ref = useReveal();
-  const [filter, setFilter] = React.useState("all");
   const filters = [
     { id: "all", label: "All Pieces" },
-    { id: "hoodies", label: "Hoodies" },
-    { id: "hats", label: "Hats" },
-    { id: "bags", label: "Bags" },
+    ...data.categories.map(c => ({ id: c.key, label: c.name })),
   ];
   const cards = data.gridCards.filter(c => {
     if (filter === "all") return true;
@@ -281,6 +229,11 @@ const Collection = ({ data, onOpen, onQuickAdd, wishlist, toggleWish }) => {
           ))}
         </div>
       </header>
+      {cards.length === 0 && (
+        <p className="collection__empty">
+          {(filters.find(f => f.id === filter) || {}).label} — coming soon. <a href="#collection" onClick={(e) => { e.preventDefault(); setFilter("all"); }}>View all pieces</a>
+        </p>
+      )}
       <div className="product-grid">
         {cards.map((c, i) => (
           <ProductCard key={i} entry={c} products={data.products}
@@ -492,7 +445,7 @@ const Footer = () => {
         <div className="footer__col">
           <h5>— Brand</h5>
           <ul>
-            <li><a href="/#story">Our Story</a></li>
+            <li><a href="/our-story">Our Story</a></li>
             <li><a href="/faq">FAQ</a></li>
             <li><a href="/code-of-conduct">Code of Conduct</a></li>
           </ul>
@@ -526,6 +479,6 @@ const Footer = () => {
 };
 
 Object.assign(window, {
-  Nav, CookieNotice, NewsletterSlideIn, Hero, Marquee, Categories,
+  Nav, CookieNotice, NewsletterSlideIn, Hero, Categories,
   ProductCard, Collection, Lookbook, Story, Footer,
 });
