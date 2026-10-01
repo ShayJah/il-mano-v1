@@ -80,9 +80,7 @@ const Checkout = ({ open, onClose, items, findProduct, onComplete }) => {
   }, [step, method, open]);
 
   const subtotal = items.reduce((sum, it) => sum + it.price * it.qty, 0);
-  const shipping = subtotal > 250 || subtotal === 0 ? 0 : 12;
-  const tax = Math.round(subtotal * 0.085);
-  const total = subtotal + shipping + tax;
+  const { shipping, tax, total } = window.IL_MANO_DATA.computeTotals(subtotal);
 
   const goNext = () => {
     setError("");

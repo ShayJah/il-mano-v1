@@ -25,7 +25,7 @@ const CookieNotice = () => {
 
 /* ─── Nav ──────────────────────────────────────────────────── */
 const NAV_LINKS = [
-  { href: "/#collection", label: "Clothing" },
+  { href: "/clothing", label: "Clothing", newTab: true },
   { href: "/gallery", label: "Gallery" },
   { href: "/our-story", label: "Our Story" },
   { href: "/faq", label: "FAQ" },
@@ -47,7 +47,7 @@ const Nav = ({ cartCount, onOpenCart, transparent, hideUntilScroll }) => {
       <nav className={"nav" + (scrolled ? " scrolled" : "") + (solid ? " solid" : "") + (hideUntilScroll && !scrolled && !drawerOpen ? " nav--hidden" : "")}>
         <div className="nav__group nav__group--left">
           {NAV_LINKS.map(l => (
-            <a key={l.label} href={l.href} className="nav__link">{l.label}</a>
+            <a key={l.label} href={l.href} className="nav__link" {...(l.newTab ? { target: "_blank", rel: "noopener" } : {})}>{l.label}</a>
           ))}
         </div>
         <a href="/" className="nav__wordmark" data-screen-label="01 Home">IL MANO</a>
@@ -65,7 +65,7 @@ const Nav = ({ cartCount, onOpenCart, transparent, hideUntilScroll }) => {
       <div className={"nav-drawer" + (drawerOpen ? " is-open" : "")}>
         <div className="nav-drawer__links">
           {NAV_LINKS.map(l => (
-            <a key={l.label} href={l.href} onClick={() => setDrawerOpen(false)}>{l.label}</a>
+            <a key={l.label} href={l.href} onClick={() => setDrawerOpen(false)} {...(l.newTab ? { target: "_blank", rel: "noopener" } : {})}>{l.label}</a>
           ))}
         </div>
         <div className="nav-drawer__foot">
@@ -248,6 +248,7 @@ const Collection = ({ data, filter, setFilter, onOpen, onQuickAdd, wishlist, tog
 /* ─── Lookbook ─────────────────────────────────────────────── */
 const Lookbook = () => {
   const ref = useReveal();
+  const pieceCount = window.IL_MANO_DATA.products.length;
   const mediaRef = React.useRef(null);
 
   React.useEffect(() => {
@@ -280,7 +281,7 @@ const Lookbook = () => {
           </p>
           <div className="lookbook__stat">
             <div>
-              <div className="lookbook__stat-val">12</div>
+              <div className="lookbook__stat-val">{pieceCount}</div>
               <div className="lookbook__stat-lbl">pieces in drop</div>
             </div>
             <div>

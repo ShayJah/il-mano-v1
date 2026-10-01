@@ -15,7 +15,16 @@ const App = () => {
   const [pdp, setPdp] = React.useState(null); // {product, colorId}
   const [cartOpen, setCartOpen] = React.useState(false);
   const [checkoutOpen, setCheckoutOpen] = React.useState(false);
-  const [items, setItems] = React.useState([]);
+  // Bag persists in localStorage so items added on /clothing show up here.
+  const [items, setItems] = React.useState(() => {
+    try { return JSON.parse(localStorage.getItem("ilmano-bag-v1")) || []; } catch (e) { return []; }
+  });
+  React.useEffect(() => {
+    try { localStorage.setItem("ilmano-bag-v1", JSON.stringify(items)); } catch (e) {}
+  }, [items]);
+  React.useEffect(() => {
+    if (window.location.hash === "#bag") setCartOpen(true);
+  }, []);
   const [wishlist, setWishlist] = React.useState(new Set());
   const [tweaks, setTweaks] = useTweaks(TWEAK_DEFAULTS);
 

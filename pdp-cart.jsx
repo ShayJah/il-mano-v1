@@ -149,7 +149,7 @@ const CartDrawer = ({ open, onClose, items, onChangeQty, onRemove, onCheckout, f
   }, [open]);
 
   const subtotal = items.reduce((sum, it) => sum + it.price * it.qty, 0);
-  const shipping = subtotal > 250 || subtotal === 0 ? 0 : 12;
+  const { shipping } = window.IL_MANO_DATA.computeTotals(subtotal);
   const total = subtotal + shipping;
 
   return (

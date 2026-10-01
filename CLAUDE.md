@@ -17,7 +17,9 @@ ship-tonight build so you don't have to re-derive them.
   - `sections.jsx` — Nav (incl. mobile drawer), Hero, Collection, Footer
   - `pdp-cart.jsx` — product detail page + cart drawer
   - `checkout.jsx` — checkout flow, real Stripe Elements
-  - `data.js` — hardcoded product catalog (plain JS, no CMS — see "Deferred" below)
+  - `data.js` — the single source of truth for products, prices, shipping/tax settings,
+    categories and grid cards. Also `require()`d by the backend. Client-facing edit
+    instructions live in `CLIENT-GUIDE.md`; `npm run check` validates it.
   - `info-content.js` + `info-page.jsx` — shared shell for FAQ/Terms/Privacy/Shipping/
     Code of Conduct pages (`faq.html`, `terms.html`, etc. each just mount this with a
     different `slug`)
@@ -37,8 +39,8 @@ ship-tonight build so you don't have to re-derive them.
     `CAPTURE_ADMIN_SECRET` shared-secret header. (In practice: Stripe Dashboard →
     Payments → Uncaptured → Capture is easier than calling this.)
   - `api/_lib/clients.js` — lazy singletons for Stripe/Redis/Ratelimit/Resend clients.
-  - `api/_lib/products.js` — server-side mirror of `data.js` prices/names/images. Keep
-    these two files in sync manually if you add/change a product.
+  - `api/_lib/products.js` — derives PRICES/NAMES/COLOR_NAMES/IMAGES from `data.js` at
+    load time (no second copy to keep in sync). Totals come from `data.computeTotals`.
   - `api/_lib/email.js` — order-confirmation email template + send logic.
 
 ## Payment model (important — don't "fix" this by mistake)
@@ -118,8 +120,8 @@ browser at desktop + 375px mobile).
 **Explicitly deferred** (do not build these without asking first — they were cut from
 scope deliberately, not overlooked):
 - Firebase Auth / customer accounts — guest checkout only, by design
-- A real CMS/admin — products stay as direct edits to `data.js` + `api/_lib/products.js`
-  (keep both in sync) + `git push`
+- A real CMS/admin — products stay as direct edits to `data.js` + `git push`
+  (see `CLIENT-GUIDE.md`)
 - Full rate-limiting/WAF hardening — only the payment endpoint has basic per-IP
   throttling
 - Load testing — needs a live deployed target, wasn't done
