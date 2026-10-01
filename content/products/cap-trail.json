@@ -1,13 +1,11 @@
 {
-  "id": "cap-trail",
-  "slug": "trail-cap",
-  "name": "Trail Cap",
   "categoryKey": "hats",
-  "price": 55,
+  "defaultColor": "black",
   "badge": "",
-  "rating": 4.8,
-  "reviews": 64,
-  "description": "Six-panel structured trucker with a hand-finished cowhide patch debossed with the ILMANO mark. Snap back fits a wide range; perforated mesh keeps the back cool through the Mojave summer.",
+  "price": 65,
+  "name": "Rodeo Cap",
+  "slug": "trail-cap",
+  "order": 2,
   "colors": [
     {
       "id": "black",
@@ -37,7 +35,7 @@
       "homeBadge": ""
     }
   ],
-  "defaultColor": "black",
+  "care": "Spot clean only. Reshape and air dry.",
   "sizes": [
     {
       "id": "os",
@@ -45,6 +43,7 @@
       "soldOut": false
     }
   ],
+  "delivery": "Complimentary worldwide shipping over $250. 14-day home trial.",
   "specs": [
     {
       "k": "Material",
@@ -63,7 +62,8 @@
       "v": "Brass snap-back, 7-position"
     }
   ],
-  "care": "Spot clean only. Reshape and air dry.",
-  "delivery": "Complimentary worldwide shipping over $250. 14-day home trial.",
-  "order": 2
+  "reviews": 64,
+  "id": "cap-trail",
+  "description": "Six-panel structured trucker with a hand-finished cowhide patch debossed with the ILMANO mark. Snap back fits a wide range; perforated mesh keeps the back cool through the Mojave summer.",
+  "rating": 4.8
 }
