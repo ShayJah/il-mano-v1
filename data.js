@@ -166,8 +166,28 @@
     { title: "Inspire", body: "American iconography, refined for the way you actually live. Bold archetypes, quiet finish." },
   ];
 
+  // Responsive photos: returns {src, srcSet, sizes} for an <img> so phones fetch the small file.
+  // Needs the resized copies made by `npm run images`; without them it falls back to the original.
+  const IMAGES = (typeof window !== "undefined" ? window.IL_MANO_IMAGES : null) || {};
+  const variant = (path, w) => {
+    const m = IMAGES[path];
+    if (!m) return path;
+    const pick = m.widths.find(x => x >= w) || m.widths[m.widths.length - 1];
+    return `assets/opt/${m.stem}-${pick}.webp`;
+  };
+  const imgAttrs = (path, sizes) => {
+    const m = IMAGES[path];
+    if (!m) return { src: path };
+    return {
+      src: variant(path, 900),
+      srcSet: m.widths.map(w => `assets/opt/${m.stem}-${w}.webp ${w}w`).join(", "),
+      sizes: sizes || "100vw",
+      decoding: "async",
+    };
+  };
+
   const DATA = {
-    settings, computeTotals,
+    settings, computeTotals, imgAttrs, imgSrc: variant,
     products, gridCards, categories, marqueeItems, storyPillars,
     findProduct: (id) => products.find(p => p.id === id),
   };

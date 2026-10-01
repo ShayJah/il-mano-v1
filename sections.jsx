@@ -25,7 +25,7 @@ const CookieNotice = () => {
 
 /* ─── Nav ──────────────────────────────────────────────────── */
 const NAV_LINKS = [
-  { href: "/clothing", label: "Clothing", newTab: true },
+  { href: "/clothing", label: "Clothing" },
   { href: "/gallery", label: "Gallery" },
   { href: "/our-story", label: "Our Story" },
   { href: "/faq", label: "FAQ" },
@@ -47,7 +47,7 @@ const Nav = ({ cartCount, onOpenCart, transparent, hideUntilScroll }) => {
       <nav className={"nav" + (scrolled ? " scrolled" : "") + (solid ? " solid" : "") + (hideUntilScroll && !scrolled && !drawerOpen ? " nav--hidden" : "")}>
         <div className="nav__group nav__group--left">
           {NAV_LINKS.map(l => (
-            <a key={l.label} href={l.href} className="nav__link" {...(l.newTab ? { target: "_blank", rel: "noopener" } : {})}>{l.label}</a>
+            <a key={l.label} href={l.href} className="nav__link">{l.label}</a>
           ))}
         </div>
         <a href="/" className="nav__wordmark" data-screen-label="01 Home">IL MANO</a>
@@ -65,7 +65,7 @@ const Nav = ({ cartCount, onOpenCart, transparent, hideUntilScroll }) => {
       <div className={"nav-drawer" + (drawerOpen ? " is-open" : "")}>
         <div className="nav-drawer__links">
           {NAV_LINKS.map(l => (
-            <a key={l.label} href={l.href} onClick={() => setDrawerOpen(false)} {...(l.newTab ? { target: "_blank", rel: "noopener" } : {})}>{l.label}</a>
+            <a key={l.label} href={l.href} onClick={() => setDrawerOpen(false)}>{l.label}</a>
           ))}
         </div>
         <div className="nav-drawer__foot">
@@ -83,7 +83,7 @@ const Hero = () => {
   return (
     <section className="hero" data-screen-label="Hero">
       <div className="hero__media">
-        <img src="assets/0619-0957_losangeles.jpg" alt="Summer 2026 — California iconography" />
+        <img {...window.IL_MANO_DATA.imgAttrs("assets/0619-0957_losangeles.jpg", "100vw")} alt="Summer 2026 — California iconography" fetchpriority="high" />
       </div>
       <div className="hero__veil" />
       <div className="hero__inner">
@@ -133,7 +133,7 @@ const Categories = ({ categories, onPickCategory }) => {
                role="button" tabIndex={0}
                onClick={() => onPickCategory && onPickCategory(c)}
                onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onPickCategory && onPickCategory(c); } }}>
-            <img className="cat__img" src={c.img} alt={c.name} loading="lazy" />
+            <img className="cat__img" {...window.IL_MANO_DATA.imgAttrs(c.img, "(max-width: 820px) 100vw, 58vw")} alt={c.name} loading="lazy" />
             <div className="cat__overlay" />
             <div className="cat__arrow"><Icon name="arrow-up-right" size={14}/></div>
             <div className="cat__label">
@@ -172,8 +172,8 @@ const ProductCard = ({ entry, products, onOpen, onQuickAdd, wishlist, toggleWish
                 aria-label="Wishlist">
           <Icon name={isWished ? "heart-filled" : "heart"} size={14}/>
         </button>
-        <img className="is-primary" src={overrideImg || color.front} alt={product.name} loading="lazy" />
-        <img className="is-secondary" src={overrideImg || color.back} alt="" loading="lazy" />
+        <img className="is-primary" {...window.IL_MANO_DATA.imgAttrs(overrideImg || color.front, "(max-width: 480px) 100vw, (max-width: 820px) 50vw, 33vw")} alt={product.name} loading="lazy" />
+        <img className="is-secondary" {...window.IL_MANO_DATA.imgAttrs(overrideImg || color.back, "(max-width: 480px) 100vw, (max-width: 820px) 50vw, 33vw")} alt="" loading="lazy" />
         <button className="card__quickadd" onClick={onQuickAddClick}>
           Quick Add <Icon name="plus" size={12}/>
         </button>
@@ -270,7 +270,7 @@ const Lookbook = () => {
     <section className="section lookbook reveal" ref={ref} data-screen-label="Lookbook">
       <div className="lookbook__inner">
         <div className="lookbook__media" ref={mediaRef}>
-          <img src="assets/lifestyle-bag-hoodie.png" alt="The Field Set — hoodie & duffle on location" loading="lazy" />
+          <img {...window.IL_MANO_DATA.imgAttrs("assets/lifestyle-bag-hoodie.png", "(max-width: 1100px) 100vw, 55vw")} alt="The Field Set — hoodie & duffle on location" loading="lazy" />
         </div>
         <aside className="lookbook__copy">
           <div className="section__index">Index 03 · Editorial</div>

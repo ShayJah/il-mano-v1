@@ -46,14 +46,14 @@ const PDP = ({ state, onClose, onAdd, products }) => {
       <div className="pdp__grid">
         <div className="pdp__gallery">
           <div className="pdp__main-img">
-            <img src={imgs[activeImg]} alt={product.name + " " + color.name} />
+            <img {...window.IL_MANO_DATA.imgAttrs(imgs[activeImg], "(max-width: 1100px) 100vw, 55vw")} alt={product.name + " " + color.name} />
           </div>
           <div className="pdp__thumbs">
             {imgs.map((src, i) => (
               <div key={i}
                    className={"pdp__thumb" + (i === activeImg ? " is-active" : "")}
                    onClick={() => setActiveImg(i)}>
-                <img src={src} alt="" />
+                <img {...window.IL_MANO_DATA.imgAttrs(src, "120px")} alt="" />
               </div>
             ))}
           </div>
@@ -177,7 +177,7 @@ const CartDrawer = ({ open, onClose, items, onChangeQty, onRemove, onCheckout, f
             return (
               <div className="cart-line" key={it.lineId}>
                 <div className="cart-line__img">
-                  <img src={color?.front} alt={product.name} />
+                  <img {...window.IL_MANO_DATA.imgAttrs(color?.front, "96px")} alt={product.name} />
                 </div>
                 <div className="cart-line__info">
                   <div className="cart-line__name">{product.name}</div>

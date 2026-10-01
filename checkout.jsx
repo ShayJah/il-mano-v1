@@ -356,7 +356,7 @@ const Checkout = ({ open, onClose, items, findProduct, onComplete }) => {
               const color = product?.colors.find(c => c.id === it.colorId);
               return (
                 <div className="sum-line" key={it.lineId}>
-                  <div className="sum-line__img"><img src={color?.front} alt=""/></div>
+                  <div className="sum-line__img"><img {...window.IL_MANO_DATA.imgAttrs(color?.front, "64px")} alt=""/></div>
                   <div>
                     <div className="sum-line__name">{product.name}</div>
                     <div className="sum-line__meta">{color?.name} · {it.sizeLabel} · ×{it.qty}</div>

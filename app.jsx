@@ -109,7 +109,7 @@ const App = () => {
     ghost.className = "fly-ghost";
     ghost.style.left = rect.left + (rect.width - 90)/2 + "px";
     ghost.style.top  = rect.top + (rect.height - 110)/2 + "px";
-    ghost.innerHTML = `<img src="${color.front}" alt="">`;
+    ghost.innerHTML = `<img src="${window.IL_MANO_DATA.imgSrc(color.front, 480)}" alt="">`;
     document.body.appendChild(ghost);
     // target = nav bag area top-right
     const navBag = document.querySelector(".nav__group--right .nav__link:last-child");

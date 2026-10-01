@@ -6,7 +6,7 @@ dashboard; you edit a few plain-text files, then publish. Most changes take 2 mi
 ## The routine (every change)
 
 1. Edit the file(s) below.
-2. Run `npm run check` in the project folder — it catches typos, missing photos and
+2. Added or changed a photo? Run `npm run images`. Then run `npm run check` in the project folder — it catches typos, missing photos and
    mismatched names and tells you exactly what's wrong. Fix anything marked ✗.
 3. Publish: `git add -A && git commit -m "Update products" && git push`
    (the site redeploys automatically). If the site doesn't update, run `vercel --prod`.
@@ -62,10 +62,12 @@ Contact email addresses (hello@ilmano.com) appear here and in the footer in `sec
 
 ## 4. Photos
 
-Put images in `assets/` and reference them as `assets/filename.webp`. Keep each under ~500 KB
-(compress at squoosh.app). `npm run check` warns about big files and errors on wrong filenames
-(names are case-sensitive: `Hoodie.webp` ≠ `hoodie.webp`).
-The `uploads/` folder is NOT published — it's just a scratch area.
+Put the original image in `assets/` (any size is fine — it's kept as the master copy) and reference it
+as `assets/filename.webp`. Then run **`npm run images`**: it creates small phone-friendly copies in
+`assets/opt/` (a 2 MB photo becomes ~50 KB on a phone) and the site picks the right size
+automatically. Commit the `assets/opt/` folder along with your photo.
+`npm run check` warns if a photo you used hasn't been through this step.
+File names are case-sensitive (`Hoodie.webp` ≠ `hoodie.webp`). The `uploads/` folder is NOT published.
 
 ## 5. Orders (no code needed)
 

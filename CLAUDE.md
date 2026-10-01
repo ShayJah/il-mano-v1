@@ -23,6 +23,9 @@ ship-tonight build so you don't have to re-derive them.
   - `info-content.js` + `info-page.jsx` — shared shell for FAQ/Terms/Privacy/Shipping/
     Code of Conduct pages (`faq.html`, `terms.html`, etc. each just mount this with a
     different `slug`)
+  - `scripts/optimize-images.js` (`npm run images`) — writes 480/900/1400px WebP copies to
+    `assets/opt/` + `assets/opt/manifest.js`; `data.js` `imgAttrs()` turns that into srcset.
+    React is loaded as the production UMD build (not development).
   - `styles.css` — single stylesheet, all of it
   - `tweaks-panel.jsx` — a design-prototyping overlay, NOT a CMS/admin. Only opens via
     postMessage from an external host; invisible to real customers.

@@ -12,6 +12,8 @@ const err = (m) => errors.push(m);
 const warn = (m) => warnings.push(m);
 
 const dupes = (arr) => arr.filter((v, i) => arr.indexOf(v) !== i);
+let optimized = {};
+try { optimized = require(path.join(root, "assets/opt/manifest.js")); } catch (e) { warn("assets/opt/manifest.js missing — run `npm run images`"); }
 const seen = new Set();
 const checkFile = (ref, where) => {
   if (seen.has(ref)) return;
@@ -19,8 +21,7 @@ const checkFile = (ref, where) => {
   if (!ref) return err(`${where}: image path is missing`);
   const abs = path.join(root, ref);
   if (!fs.existsSync(abs)) return err(`${where}: file not found → ${ref}`);
-  const kb = fs.statSync(abs).size / 1024;
-  if (kb > 600) warn(`${where}: ${ref} is ${Math.round(kb)} KB — consider compressing (slow on mobile)`);
+  if (!optimized[ref]) warn(`${where}: ${ref} has no small mobile versions — run \`npm run images\``);
 };
 
 const { settings, products, gridCards, categories } = data;

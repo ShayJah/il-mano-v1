@@ -2,6 +2,10 @@
 // everything here is derived from data.js (the file the store owner edits), so the
 // backend still recomputes totals itself and never trusts a price the browser sends.
 const data = require("../../data.js");
+let optimized = {};
+try { optimized = require("../../assets/opt/manifest.js"); } catch (e) {}
+// Emails show small thumbnails — use the 480px copy when one exists.
+const emailImage = (p) => (optimized[p] ? `assets/opt/${optimized[p].stem}-${optimized[p].widths[0]}.webp` : p);
 
 const PRICES = {};
 const NAMES = {};
@@ -14,7 +18,7 @@ for (const p of data.products) {
   IMAGES[p.id] = {};
   for (const c of p.colors) {
     COLOR_NAMES[p.id][c.id] = c.name;
-    IMAGES[p.id][c.id] = c.front;
+    IMAGES[p.id][c.id] = emailImage(c.front);
   }
 }
 
