@@ -62,6 +62,7 @@ body[data-surface="stark"] {
 /* ─── Reset ───────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; overflow-x: hidden; overflow-x: clip; }
+button, a { -webkit-tap-highlight-color: transparent; }
 body {
   background: var(--bg);
   color: var(--ink);
@@ -1794,8 +1795,11 @@ body[data-surface="dark"] .cta:hover { background: var(--tobacco); }
   :root { --nav-h: 56px; }
   .nav__group { gap: 16px; font-size: 10px; }
   .nav__group--left { display: none; }
-  .nav__burger { display: flex; }
-  /* Mobile: logo locked to the true centre; bag + menu pinned to the right. */
+  .nav__burger { display: flex; grid-column: 1; grid-row: 1; justify-self: start; }
+  .nav__wordmark, .nav__group--right { grid-row: 1; }
+  .nav__bag-label { display: none; }
+  .nav__bag .icon, .nav__bag svg { width: 20px; height: 20px; }
+  /* Mobile: menu lines pinned left, logo locked to the true centre, bag icon pinned right. */
   .nav { grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); }
   .nav__wordmark { grid-column: 2; justify-self: center; font-size: 18px; letter-spacing: 0.28em; padding-left: 0.28em; }
   .nav__group--right { grid-column: 3; }

@@ -240,6 +240,9 @@ const ClothingPage = () => {
   return (
     <>
       <nav className="c-nav">
+        <button className="c-burger" aria-label="Menu" aria-expanded={menuOpen} onClick={() => setMenuOpen(v => !v)}>
+          <span /><span />
+        </button>
         <div className="c-nav__l">
           <a href="/clothing" className="is-current">Clothing</a>
           <a href="/gallery">Gallery</a>
@@ -251,9 +254,6 @@ const ClothingPage = () => {
             <I n="bag" s={24} />
             {count > 0 && <span className="c-badge" key={count}>{count}</span>}
           </a>
-          <button className="c-burger" aria-label="Menu" aria-expanded={menuOpen} onClick={() => setMenuOpen(v => !v)}>
-            <span /><span />
-          </button>
         </div>
       </nav>
 

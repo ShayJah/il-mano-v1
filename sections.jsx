@@ -45,6 +45,10 @@ const Nav = ({ cartCount, onOpenCart, transparent, hideUntilScroll }) => {
   return (
     <>
       <nav className={"nav" + (scrolled ? " scrolled" : "") + (solid ? " solid" : "") + (hideUntilScroll && !scrolled && !drawerOpen ? " nav--hidden" : "")}>
+        <button className="nav__burger" aria-label="Menu" aria-expanded={drawerOpen}
+                onClick={() => setDrawerOpen(v => !v)}>
+          <span/><span/>
+        </button>
         <div className="nav__group nav__group--left">
           {NAV_LINKS.map(l => (
             <a key={l.label} href={l.href} className="nav__link">{l.label}</a>
@@ -52,13 +56,9 @@ const Nav = ({ cartCount, onOpenCart, transparent, hideUntilScroll }) => {
         </div>
         <a href="/" className="nav__wordmark" data-screen-label="01 Home">IL MANO</a>
         <div className="nav__group nav__group--right">
-          <a href="#" className="nav__link" onClick={(e)=>{e.preventDefault(); onOpenCart();}}>
-            <Icon name="bag" size={14}/> Bag <span className="nav__bag-count">({String(cartCount).padStart(2,"0")})</span>
+          <a href="#" className="nav__link nav__bag" aria-label={`Bag, ${cartCount} items`} onClick={(e)=>{e.preventDefault(); onOpenCart();}}>
+            <Icon name="bag" size={14}/> <span className="nav__bag-label">Bag</span> <span className="nav__bag-count">({String(cartCount).padStart(2,"0")})</span>
           </a>
-          <button className="nav__burger" aria-label="Menu" aria-expanded={drawerOpen}
-                  onClick={() => setDrawerOpen(v => !v)}>
-            <span/><span/>
-          </button>
         </div>
       </nav>
 

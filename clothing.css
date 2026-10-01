@@ -4,14 +4,14 @@
   --c-media: #EEEBE6; --c-ivory: #F3EFE8; --c-mid: #8c8780;
   --c-ease: cubic-bezier(0.16, 1, 0.3, 1);
   --serif: "Cormorant Garamond", "Times New Roman", serif;
-  --mono: "JetBrains Mono", "SF Mono", ui-monospace, monospace;
+  --mono: var(--sans); /* two families only: Cormorant (display) + Inter Tight (everything else) */
   --sans: "Inter Tight", "Helvetica Neue", system-ui, sans-serif;
 }
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { -webkit-font-smoothing: antialiased; }
 body { background: var(--c-bg); color: var(--c-ink); font-family: var(--sans); font-size: 13px; font-weight: 400; line-height: 1.4; }
 a { color: inherit; text-decoration: none; }
-button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; -webkit-tap-highlight-color: transparent; }
 ul { list-style: none; }
 :focus-visible { outline: 1px solid var(--c-ink); outline-offset: 2px; }
 
@@ -108,8 +108,9 @@ ul { list-style: none; }
 .c-card__price { font-size: 13px; margin-top: 4px; }
 .c-swatches { display: flex; gap: 2px; margin-top: 6px; margin-left: -4px; }
 .c-swatch { width: 28px; height: 28px; display: grid; place-items: center; border-radius: 50%; }
-.c-swatch i { display: block; width: 14px; height: 14px; border-radius: 50%; border: 1px solid rgba(22,17,13,0.18); }
-.c-swatch.is-on { box-shadow: inset 0 0 0 1px var(--c-ink); }
+.c-swatch i { display: block; width: 16px; height: 16px; border-radius: 50%; border: 1px solid rgba(22,17,13,0.18); }
+/* The selected ring hugs the colour dot; the 44px tap area on touch stays invisible */
+.c-swatch.is-on i { box-shadow: 0 0 0 2px var(--c-bg), 0 0 0 3px var(--c-ink); }
 
 /* Toast */
 .c-toast {
@@ -144,7 +145,8 @@ ul { list-style: none; }
   .c-nav { grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); }
   .c-nav__mark { grid-column: 2; justify-self: center; font-size: 22px; }
   .c-nav__r { grid-column: 3; }
-  .c-burger { display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 5px; width: 40px; height: 44px; }
+  .c-burger { display: flex; flex-direction: column; justify-content: center; align-items: flex-start; gap: 5px; width: 44px; height: 44px; grid-column: 1; grid-row: 1; justify-self: start; }
+  .c-nav__mark, .c-nav__r { grid-row: 1; }
   .c-burger span { display: block; width: 20px; height: 1px; background: currentColor; transition: transform 0.3s var(--c-ease); }
   .c-burger[aria-expanded="true"] span:first-child { transform: translateY(3px) rotate(45deg); }
   .c-burger[aria-expanded="true"] span:last-child { transform: translateY(-3px) rotate(-45deg); }
