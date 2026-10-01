@@ -3,14 +3,14 @@
    two fresco crops meet) → Inspiration (full fresco) → Closing.
    All scroll effects write straight to the DOM in a rAF loop; transform and
    opacity only. prefers-reduced-motion renders the end state, no listeners. */
-const OS_VISION = [
-  ["We"], ["envision"], ["a"], ["world"], ["where"],
-  ["art,", 1], ["fashion,", 1], ["and"], ["philanthropy", 1], ["come"], ["together"],
-  ["to"], ["inspire"], ["connection,"], ["creativity,"], ["and"], ["meaningful"], ["change."],
-];
-const OS_VALUES = [
-  ["I", "Creative"], ["II", "Transformative"], ["III", "Intellectual"], ["IV", "Deeply human"],
-];
+// Vision sentence and values come from the CMS (content/story.json).
+// In the sentence, wrap a word in *asterisks* to emphasise it.
+const OS_STORY = (window.IL_MANO_CONTENT || {}).story || {};
+const OS_VISION = (OS_STORY.vision || "").split(/\s+/).filter(Boolean).map(w => {
+  const em = /^\*.*\*$/.test(w);
+  return em ? [w.slice(1, -1), 1] : [w];
+});
+const OS_VALUES = (OS_STORY.values || []).map(v => [v.numeral, v.label]);
 const OS_WORDS_PX = 520;          // scroll distance over which the words light up
 const OS_HANDS_OFFSET = 460;      // px each hand starts off to its side
 const OS_GAP = 8;                 // px between the fingertips when together

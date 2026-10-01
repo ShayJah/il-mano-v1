@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Sanity-checks data.js so a typo is caught before it reaches the live site.
+// Sanity-checks the catalog (content/ via data.js) so a typo is caught before it reaches the live site.
 // Run:  npm run check
 const fs = require("fs");
 const path = require("path");

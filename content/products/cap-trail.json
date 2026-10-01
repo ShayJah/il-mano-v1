@@ -1,0 +1,69 @@
+{
+  "id": "cap-trail",
+  "slug": "trail-cap",
+  "name": "Trail Cap",
+  "categoryKey": "hats",
+  "price": 55,
+  "badge": "",
+  "rating": 4.8,
+  "reviews": 64,
+  "description": "Six-panel structured trucker with a hand-finished cowhide patch debossed with the ILMANO mark. Snap back fits a wide range; perforated mesh keeps the back cool through the Mojave summer.",
+  "colors": [
+    {
+      "id": "black",
+      "name": "Vanta Black",
+      "hex": "#0e0e0e",
+      "front": "assets/cap-black.webp",
+      "back": "assets/cap-black.webp",
+      "showOnHome": true,
+      "homeBadge": ""
+    },
+    {
+      "id": "brown",
+      "name": "Cabalo Brown",
+      "hex": "#6b4a2b",
+      "front": "assets/cap-brown.webp",
+      "back": "assets/cap-brown.webp",
+      "showOnHome": true,
+      "homeBadge": ""
+    },
+    {
+      "id": "white",
+      "name": "Bone White",
+      "hex": "#efeadd",
+      "front": "assets/cap-white.webp",
+      "back": "assets/cap-white.webp",
+      "showOnHome": true,
+      "homeBadge": ""
+    }
+  ],
+  "defaultColor": "black",
+  "sizes": [
+    {
+      "id": "os",
+      "label": "One Size",
+      "soldOut": false
+    }
+  ],
+  "specs": [
+    {
+      "k": "Material",
+      "v": "Brushed canvas crown, polyester mesh back"
+    },
+    {
+      "k": "Patch",
+      "v": "Genuine cowhide, laser-debossed mark"
+    },
+    {
+      "k": "Origin",
+      "v": "Cut, sewn & finished in Los Angeles, CA"
+    },
+    {
+      "k": "Closure",
+      "v": "Brass snap-back, 7-position"
+    }
+  ],
+  "care": "Spot clean only. Reshape and air dry.",
+  "delivery": "Complimentary worldwide shipping over $250. 14-day home trial.",
+  "order": 2
+}

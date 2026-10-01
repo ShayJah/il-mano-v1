@@ -1,0 +1,179 @@
+# IL MANO content manager (Decap CMS). Open /admin on the live site.
+# Every save is a git commit to `main`; Vercel then redeploys the site (~1 minute).
+backend:
+  name: github
+  repo: ShayJah/il-mano-v1
+  branch: main
+  # Where the login popup lives (api/auth.js + api/callback.js). If the site moves
+  # to a custom domain, change base_url to it — and update the GitHub OAuth app's callback URL.
+  base_url: https://il-mano-v1.vercel.app
+  auth_endpoint: api/auth
+
+media_folder: assets          # uploaded photos land in /assets ...
+public_folder: assets         # ... and are referenced as "assets/photo.webp", like the rest of the site
+locale: en
+
+collections:
+  # ───────────────────────── Products ─────────────────────────
+  - name: products
+    label: Products
+    label_singular: Product
+    folder: content/products
+    extension: json
+    format: json
+    create: true
+    slug: "{{id}}"
+    identifier_field: id
+    summary: "{{name}} — ${{price}}"
+    sortable_fields: [order, name, price]
+    fields:
+      - { label: Name, name: name, widget: string }
+      - { label: "Product ID", name: id, widget: string, pattern: ["^[a-z0-9-]+$", "Lowercase letters, numbers and dashes only"], hint: "Permanent internal ID, e.g. tee-classic. Never change it after launch — orders refer to it." }
+      - { label: "URL slug", name: slug, widget: string, pattern: ["^[a-z0-9-]+$", "Lowercase letters, numbers and dashes only"], hint: "Used in the product's web address, e.g. classic-tee" }
+      - { label: "Display order", name: order, widget: number, value_type: int, min: 1, hint: "1 shows first on the site" }
+      - label: Category
+        name: categoryKey
+        widget: relation
+        collection: site
+        file: home
+        search_fields: ["categories.*.name"]
+        value_field: "categories.*.key"
+        display_fields: ["categories.*.name"]
+      - { label: "Price (USD)", name: price, widget: number, value_type: int, min: 1, hint: "Whole dollars. This is the price Stripe charges." }
+      - { label: "Badge", name: badge, widget: string, required: false, hint: "Small label like New or Limited. Leave empty for none." }
+      - { label: Rating, name: rating, widget: number, value_type: float, min: 0, max: 5 }
+      - { label: "Review count", name: reviews, widget: number, value_type: int, min: 0 }
+      - { label: Description, name: description, widget: text }
+      - label: Colours
+        name: colors
+        widget: list
+        summary: "{{fields.name}}"
+        min: 1
+        fields:
+          - { label: "Colour ID", name: id, widget: string, pattern: ["^[a-z0-9-]+$", "Lowercase letters, numbers and dashes only"], hint: "Short and permanent, e.g. black" }
+          - { label: "Colour name", name: name, widget: string }
+          - { label: Swatch, name: hex, widget: color }
+          - { label: "Front photo", name: front, widget: image }
+          - { label: "Back photo", name: back, widget: image, hint: "No back photo? Pick the front one again." }
+          - { label: "Cut-out photo (Clothing page)", name: cutout, widget: image, required: false }
+          - { label: "Show on home page", name: showOnHome, widget: boolean, default: true }
+          - { label: "Home-page badge", name: homeBadge, widget: string, required: false }
+      - { label: "Default colour ID", name: defaultColor, widget: string, hint: "Must match one Colour ID above" }
+      - label: Sizes
+        name: sizes
+        widget: list
+        summary: "{{fields.label}}{{fields.soldOut}}"
+        min: 1
+        fields:
+          - { label: "Size ID", name: id, widget: string, pattern: ["^[a-z0-9-]+$", "Lowercase letters, numbers and dashes only"] }
+          - { label: Label, name: label, widget: string, hint: "What shoppers see, e.g. XL" }
+          - { label: "Sold out", name: soldOut, widget: boolean, default: false }
+      - label: Specs
+        name: specs
+        widget: list
+        summary: "{{fields.k}}"
+        fields:
+          - { label: Label, name: k, widget: string }
+          - { label: Detail, name: v, widget: string }
+      - { label: "Care instructions", name: care, widget: text }
+      - { label: "Delivery note", name: delivery, widget: text, hint: "Mention shipping amounts only if they match Store settings" }
+
+  # ───────────────────── Store & home page ─────────────────────
+  - name: site
+    label: Store & Home Page
+    files:
+      - name: store
+        label: "Shipping & tax"
+        file: content/store.json
+        fields:
+          - { label: "Free shipping over (USD)", name: freeShippingOver, widget: number, value_type: int, min: 0, hint: "Orders ABOVE this ship free" }
+          - { label: "Flat shipping rate (USD)", name: flatShipping, widget: number, value_type: int, min: 0 }
+          - { label: "Tax rate", name: taxRate, widget: number, value_type: float, min: 0, max: 1, step: 0.001, hint: "As a decimal: 0.085 = 8.5%" }
+      - name: home
+        label: "Home page"
+        file: content/home.json
+        fields:
+          - { label: "Scrolling banner words", name: marqueeItems, widget: list, field: { label: Text, name: text, widget: string } }
+          - label: "Connect / Create / Inspire"
+            name: storyPillars
+            widget: list
+            summary: "{{fields.title}}"
+            fields:
+              - { label: Title, name: title, widget: string }
+              - { label: Text, name: body, widget: text }
+          - label: Categories
+            name: categories
+            widget: list
+            summary: "{{fields.name}}"
+            fields:
+              - { label: Number, name: num, widget: string, hint: "e.g. 01" }
+              - { label: Name, name: name, widget: string }
+              - { label: "Key", name: key, widget: string, pattern: ["^[a-z0-9-]+$", "Lowercase letters, numbers and dashes only"], hint: "Products pick their category by this" }
+              - { label: Photo, name: img, widget: image }
+              - { label: Size, name: size, widget: select, options: [lg, md, sm] }
+              - { label: "Label override", name: count, widget: string, required: false, hint: "Leave empty to show 'N pieces' automatically" }
+          - label: "Special cards (e.g. bundles)"
+            name: extraCards
+            widget: list
+            required: false
+            summary: "{{fields.overrideName}}"
+            hint: "Display only — adding one to the bag charges the normal price of the product it points to."
+            fields:
+              - { label: "Product ID", name: productId, widget: string }
+              - { label: "Colour ID", name: colorId, widget: string }
+              - { label: Badge, name: badge, widget: string, required: false }
+              - { label: "Title", name: overrideName, widget: string }
+              - { label: "Price shown", name: overridePrice, widget: number, value_type: int }
+              - { label: Photo, name: overrideImg, widget: image }
+              - { label: "Sub-line", name: overrideSub, widget: string }
+
+  # ───────────────── Gallery & Our Story ─────────────────
+  - name: pages_media
+    label: Gallery & Our Story
+    files:
+      - name: gallery
+        label: "Gallery page"
+        file: content/gallery.json
+        fields:
+          - label: Pieces
+            name: pieces
+            widget: list
+            summary: "{{fields.title}}"
+            hint: "The three floating pieces, in order. Use transparent PNG/WebP cut-outs. (Movement is fixed — only photo and text change.)"
+            fields:
+              - { label: "ID (don't change)", name: id, widget: string, hint: "black, brown or blue — ties the text to its animation" }
+              - { label: Photo, name: src, widget: image }
+              - { label: Title, name: title, widget: string }
+              - { label: Caption, name: meta, widget: string }
+      - name: story
+        label: "Our Story page"
+        file: content/story.json
+        fields:
+          - { label: "Vision sentence", name: vision, widget: text, hint: "Put *asterisks* around words that should be highlighted, e.g. *art,*" }
+          - label: Values
+            name: values
+            widget: list
+            summary: "{{fields.numeral}} {{fields.label}}"
+            fields:
+              - { label: Numeral, name: numeral, widget: string }
+              - { label: Label, name: label, widget: string }
+
+  # ───────────────────── Info pages ─────────────────────
+  - name: pages
+    label: Info Pages
+    files:
+      - { name: faq, label: FAQ, file: content/pages/faq.json, fields: &pagefields [
+          { label: "Small heading above title", name: eyebrow, widget: string },
+          { label: Title, name: title, widget: string, hint: "Wrap one word in <em>…</em> for the italic accent" },
+          { label: Intro, name: intro, widget: text, required: false, hint: "Use {{date}} for today's date (Terms page does)" },
+          { label: Sections, name: sections, widget: list, summary: "{{fields.heading}}", fields: [
+            { label: Heading, name: heading, widget: string },
+            { label: "Anchor ID", name: id, widget: string, required: false, hint: "Only for pages linking to this section — leave as is" },
+            { label: Text, name: body, widget: text, required: false },
+            { label: "Questions / items", name: items, widget: list, required: false, summary: "{{fields.q}}", fields: [
+              { label: Question / label, name: q, widget: string },
+              { label: Answer, name: a, widget: text } ] } ] } ] }
+      - { name: shipping-returns, label: "Shipping & Returns", file: content/pages/shipping-returns.json, fields: *pagefields }
+      - { name: terms, label: "Terms of Service", file: content/pages/terms.json, fields: *pagefields }
+      - { name: privacy, label: "Privacy Policy", file: content/pages/privacy.json, fields: *pagefields }
+      - { name: code-of-conduct, label: "Code of Conduct", file: content/pages/code-of-conduct.json, fields: *pagefields }

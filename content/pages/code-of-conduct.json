@@ -1,0 +1,19 @@
+{
+  "eyebrow": "Legal",
+  "title": "Code of <em>conduct.</em>",
+  "intro": "How we expect people to treat each other, on this site and in any community spaces we run.",
+  "sections": [
+    {
+      "heading": "Our standard",
+      "body": "IL MANO is committed to providing a respectful, harassment-free experience for everyone — customers, staff, and partners — regardless of background, identity, or how they found us."
+    },
+    {
+      "heading": "Not tolerated",
+      "body": "Harassment, hate speech, threats, fraud, or abuse directed at our staff or other customers (including in reviews, emails, or support channels) will not be tolerated and may result in your account or order being refused or cancelled."
+    },
+    {
+      "heading": "Reporting a concern",
+      "body": "If you experience or witness a violation of this code, please email hello@ilmano.com and we will review it promptly."
+    }
+  ]
+}

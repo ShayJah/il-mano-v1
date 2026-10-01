@@ -6,7 +6,9 @@
   "scripts": {
     "local": "vercel dev",
     "check": "node scripts/check-catalog.js",
-    "images": "node scripts/optimize-images.js"
+    "images": "node scripts/optimize-images.js",
+    "build:content": "node scripts/build-content.js",
+    "build": "node scripts/build-content.js && node scripts/optimize-images.js && node scripts/check-catalog.js"
   },
   "dependencies": {
     "@upstash/ratelimit": "^2.0.5",

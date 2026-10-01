@@ -1,0 +1,42 @@
+{
+  "eyebrow": "Support",
+  "title": "Shipping &amp; <em>returns.</em>",
+  "intro": "Manufactured and shipped from Los Angeles, CA.",
+  "sections": [
+    {
+      "heading": "Shipping",
+      "items": [
+        {
+          "q": "Standard",
+          "a": "Free on orders over $250, otherwise $12. Delivered in 4–6 business days."
+        },
+        {
+          "q": "Express",
+          "a": "$18. Delivered in 2–3 business days."
+        },
+        {
+          "q": "Same Day (LA only)",
+          "a": "$35. Same-day delivery within Los Angeles County for orders placed before 12pm PT."
+        }
+      ]
+    },
+    {
+      "heading": "Returns",
+      "id": "returns",
+      "items": [
+        {
+          "q": "Return window",
+          "a": "14 days from delivery for a full refund to your original payment method. Limited-run pieces (marked 'Limited') have a 30-day window."
+        },
+        {
+          "q": "Condition",
+          "a": "Items must be unworn, unwashed, and in original packaging with tags attached."
+        },
+        {
+          "q": "How to start a return",
+          "a": "Email hello@ilmano.com with your order number and we'll send a prepaid return label."
+        }
+      ]
+    }
+  ]
+}

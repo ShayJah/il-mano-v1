@@ -1,0 +1,47 @@
+{
+  "eyebrow": "Support",
+  "title": "Frequently <em>asked.</em>",
+  "intro": "Everything you need to know before your order arrives. Can't find it here — email us at hello@ilmano.com.",
+  "sections": [
+    {
+      "heading": "Orders & Payment",
+      "items": [
+        {
+          "q": "How does checkout work?",
+          "a": "We use Stripe to securely process your card. Your card is authorized at checkout and charged once your order is confirmed and prepared for shipment — you won't see a duplicate charge."
+        },
+        {
+          "q": "Is my payment information safe?",
+          "a": "Yes. Card details are sent directly to Stripe and never touch our servers. We only ever see a tokenized reference, never your full card number."
+        },
+        {
+          "q": "Can I change or cancel my order?",
+          "a": "Email hello@ilmano.com as soon as possible. If your order hasn't been captured/shipped yet, we can usually cancel or adjust it."
+        }
+      ]
+    },
+    {
+      "heading": "Shipping",
+      "items": [
+        {
+          "q": "Where do you ship from?",
+          "a": "Every piece is manufactured and shipped from Los Angeles, CA."
+        },
+        {
+          "q": "How long does delivery take?",
+          "a": "Standard delivery is 4–6 business days within the US. See our Shipping & Returns page for full details."
+        }
+      ]
+    },
+    {
+      "heading": "Sizing",
+      "id": "sizing",
+      "items": [
+        {
+          "q": "How do I find my size?",
+          "a": "Our pieces run true to size with a relaxed, unisex fit. If you're between sizes, we recommend sizing down for a closer fit."
+        }
+      ]
+    }
+  ]
+}

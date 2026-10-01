@@ -1,0 +1,35 @@
+{
+  "eyebrow": "Legal",
+  "title": "Terms of <em>service.</em>",
+  "intro": "Last updated {{date}}. This is a starter policy — have it reviewed by counsel before relying on it at scale.",
+  "sections": [
+    {
+      "heading": "1. Agreement to terms",
+      "body": "By accessing or purchasing from IL MANO ('we', 'us'), you agree to be bound by these Terms of Service. If you do not agree, please do not use this site."
+    },
+    {
+      "heading": "2. Orders & payment",
+      "body": "All prices are listed in USD. When you place an order, your card is authorized for the order total; the charge is captured once the order is confirmed. We reserve the right to refuse or cancel any order at our discretion, including for suspected fraud or pricing errors."
+    },
+    {
+      "heading": "3. Shipping & risk of loss",
+      "body": "Risk of loss and title for items purchased pass to you upon delivery to the carrier. See our Shipping & Returns page for delivery estimates."
+    },
+    {
+      "heading": "4. Returns",
+      "body": "See our Shipping & Returns page for our return window and process."
+    },
+    {
+      "heading": "5. Intellectual property",
+      "body": "All content on this site — including the IL MANO name, marks, photography, and designs — is our property or licensed to us, and may not be reproduced without permission."
+    },
+    {
+      "heading": "6. Limitation of liability",
+      "body": "IL MANO is not liable for indirect, incidental, or consequential damages arising from use of this site or its products, to the maximum extent permitted by law."
+    },
+    {
+      "heading": "7. Contact",
+      "body": "Questions about these terms? Email hello@ilmano.com."
+    }
+  ]
+}

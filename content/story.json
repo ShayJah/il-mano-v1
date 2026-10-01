@@ -1,0 +1,21 @@
+{
+  "vision": "We envision a world where *art,* *fashion,* and *philanthropy* come together to inspire connection, creativity, and meaningful change.",
+  "values": [
+    {
+      "numeral": "I",
+      "label": "Creative"
+    },
+    {
+      "numeral": "II",
+      "label": "Transformative"
+    },
+    {
+      "numeral": "III",
+      "label": "Intellectual"
+    },
+    {
+      "numeral": "IV",
+      "label": "Deeply human"
+    }
+  ]
+}

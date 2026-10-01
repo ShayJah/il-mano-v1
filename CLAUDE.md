@@ -17,12 +17,20 @@ ship-tonight build so you don't have to re-derive them.
   - `sections.jsx` — Nav (incl. mobile drawer), Hero, Collection, Footer
   - `pdp-cart.jsx` — product detail page + cart drawer
   - `checkout.jsx` — checkout flow, real Stripe Elements
-  - `data.js` — the single source of truth for products, prices, shipping/tax settings,
-    categories and grid cards. Also `require()`d by the backend. Client-facing edit
-    instructions live in `CLIENT-GUIDE.md`; `npm run check` validates it.
+  - `content/*.json` — all editable content (products, store settings, home page, gallery,
+    Our Story, info pages), edited by clients through the **Decap CMS at `/admin`**
+    (`admin/config.yml`; GitHub login via `api/auth.js` + `api/callback.js`; needs
+    `GITHUB_OAUTH_ID`/`GITHUB_OAUTH_SECRET`). Each save is a git commit → Vercel redeploys.
+  - `scripts/build-content.js` — bundles `content/` into `content.generated.js` (committed;
+    also regenerated on every Vercel deploy via `npm run build`, which then runs
+    `optimize-images` and `check-catalog`, so a bad edit fails the deploy instead of going live).
+    After hand-editing `content/`, run `npm run build:content`.
+  - `data.js` — turns `content.generated.js` into the shapes the site uses (derives home
+    grid cards from per-colour "Show on home page", category names, totals). Also
+    `require()`d by the backend. Client instructions: `CLIENT-GUIDE.md`; `npm run check` validates it.
   - `info-content.js` + `info-page.jsx` — shared shell for FAQ/Terms/Privacy/Shipping/
     Code of Conduct pages (`faq.html`, `terms.html`, etc. each just mount this with a
-    different `slug`)
+    different `slug`); wording comes from `content/pages/*.json`
   - `scripts/optimize-images.js` (`npm run images`) — writes 480/900/1400px WebP copies to
     `assets/opt/` + `assets/opt/manifest.js`; `data.js` `imgAttrs()` turns that into srcset.
     React is loaded as the production UMD build (not development).
@@ -123,8 +131,7 @@ browser at desktop + 375px mobile).
 **Explicitly deferred** (do not build these without asking first — they were cut from
 scope deliberately, not overlooked):
 - Firebase Auth / customer accounts — guest checkout only, by design
-- A real CMS/admin — products stay as direct edits to `data.js` + `git push`
-  (see `CLIENT-GUIDE.md`)
+- A database-backed admin — the CMS is git-based (Decap); content changes need a redeploy
 - Full rate-limiting/WAF hardening — only the payment endpoint has basic per-IP
   throttling
 - Load testing — needs a live deployed target, wasn't done

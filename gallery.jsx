@@ -11,7 +11,7 @@
 
    Keyframe fields — x / y: offset from stage centre in vw / vh,
    w: scale (1 = focus size), blur: px, op: opacity, rot: degrees. */
-const GAL_PIECES = [
+const GAL_BASE = [
   { id: "black", src: "assets/gallery/hoodie-black-front.webp", blend: false,
     title: "Vanta Black", meta: "Classic Hoodie · French terry · Los Angeles",
     frames: [
@@ -41,6 +41,10 @@ const GAL_PIECES = [
       { x: 46,  y: 30,  w: 1.3,  blur: 22, op: 0.8,  rot: 12 },
     ] },
 ];
+
+// Image, title and caption come from the CMS (content/gallery.json); the motion keyframes above stay in code.
+const GAL_CMS = Object.fromEntries(((window.IL_MANO_CONTENT || {}).gallery?.pieces || []).map(p => [p.id, p]));
+const GAL_PIECES = GAL_BASE.map(pc => ({ ...pc, ...(GAL_CMS[pc.id] || {}) }));
 
 const galSmoother = (t) => t * t * t * (t * (t * 6 - 15) + 10);
 const galClamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));

@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex" />
+  <title>IL MANO — Content Manager</title>
+  <!-- Absolute path: with cleanUrls, /admin has no trailing slash, so a relative config.yml would resolve to /config.yml -->
+  <link href="/admin/config.yml" type="text/yaml" rel="cms-config-url" />
+</head>
+<body>
+  <!-- Decap CMS: reads admin/config.yml, edits the JSON in /content and commits to GitHub. -->
+  <script src="https://unpkg.com/decap-cms@3.16.3/dist/decap-cms.js"></script>
+</body>
+</html>

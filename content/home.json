@@ -1,0 +1,77 @@
+{
+  "marqueeItems": [
+    "Summer 2026",
+    "Manufactured in Los Angeles",
+    "Connect · Create · Inspire",
+    "American Iconography",
+    "Hand finished",
+    "Made to Endure"
+  ],
+  "storyPillars": [
+    {
+      "title": "Connect",
+      "body": "Every piece carries the imprint of the hand that made it. Wear it, and you carry the line back to the maker."
+    },
+    {
+      "title": "Create",
+      "body": "Garments engineered like leather: tested by use, improved by wear. We make objects that earn their place in your closet."
+    },
+    {
+      "title": "Inspire",
+      "body": "American iconography, refined for the way you actually live. Bold archetypes, quiet finish."
+    }
+  ],
+  "categories": [
+    {
+      "num": "01",
+      "name": "Hoodies",
+      "key": "hoodies",
+      "img": "assets/hoodie-black-back.webp",
+      "size": "lg",
+      "count": "1 piece"
+    },
+    {
+      "num": "02",
+      "name": "T-Shirts",
+      "key": "t-shirts",
+      "img": "assets/hoodie-white-front.webp",
+      "size": "md",
+      "count": "Coming soon"
+    },
+    {
+      "num": "03",
+      "name": "Hats",
+      "key": "hats",
+      "img": "assets/cap-brown.webp",
+      "size": "sm",
+      "count": "1 piece"
+    },
+    {
+      "num": "04",
+      "name": "Bags",
+      "key": "bags",
+      "img": "assets/bag-duffle.png",
+      "size": "sm",
+      "count": "1 piece"
+    },
+    {
+      "num": "05",
+      "name": "Gallery",
+      "key": "gallery",
+      "img": "assets/brand-tags.webp",
+      "size": "sm",
+      "count": "Bespoke"
+    }
+  ],
+  "extraCards": [
+    {
+      "productId": "hoodie-classic",
+      "colorId": "brown",
+      "badge": "Bundle",
+      "overrideName": "The Field Set",
+      "overridePrice": 340,
+      "overrideImg": "assets/lifestyle-bag-hoodie.png",
+      "overrideSub": "Hoodie + Duffle"
+    }
+  ]
+}

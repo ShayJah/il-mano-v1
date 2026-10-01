@@ -1,0 +1,106 @@
+{
+  "id": "hoodie-classic",
+  "slug": "classic-hoodie",
+  "name": "Classic Hoodie",
+  "categoryKey": "hoodies",
+  "price": 100,
+  "badge": "New",
+  "rating": 4.9,
+  "reviews": 128,
+  "description": "Inspired by the weathered textures of the American West and refined for the urban landscape. Crafted from premium 100% French Terry and finished with a specialized LA-dye process to achieve a soft, lived-in patina from the first wear. A rebellious take on luxury basics — built to age beautifully and endure the grind.",
+  "colors": [
+    {
+      "id": "black",
+      "name": "Vanta Black",
+      "hex": "#0e0e0e",
+      "front": "assets/hoodie-black-front.webp",
+      "back": "assets/hoodie-black-back.webp",
+      "cutout": "assets/gallery/hoodie-black-front.webp",
+      "showOnHome": true,
+      "homeBadge": "New"
+    },
+    {
+      "id": "white",
+      "name": "Bone White",
+      "hex": "#efeadd",
+      "front": "assets/hoodie-white-front.webp",
+      "back": "assets/hoodie-white-back.webp",
+      "showOnHome": true,
+      "homeBadge": ""
+    },
+    {
+      "id": "blue",
+      "name": "Electric Blue",
+      "hex": "#1f3a8a",
+      "front": "assets/hoodie-blue-front.webp",
+      "back": "assets/hoodie-blue-back.webp",
+      "cutout": "assets/gallery/hoodie-blue-front.webp",
+      "showOnHome": true,
+      "homeBadge": ""
+    },
+    {
+      "id": "brown",
+      "name": "Cabalo Brown",
+      "hex": "#6b4a2b",
+      "front": "assets/hoodie-brown-front.webp",
+      "back": "assets/hoodie-brown-back.webp",
+      "cutout": "assets/gallery/hoodie-brown-front.webp",
+      "showOnHome": true,
+      "homeBadge": "Hot"
+    }
+  ],
+  "defaultColor": "black",
+  "sizes": [
+    {
+      "id": "xs",
+      "label": "XS",
+      "soldOut": true
+    },
+    {
+      "id": "s",
+      "label": "S",
+      "soldOut": false
+    },
+    {
+      "id": "m",
+      "label": "M",
+      "soldOut": false
+    },
+    {
+      "id": "l",
+      "label": "L",
+      "soldOut": false
+    },
+    {
+      "id": "xl",
+      "label": "XL",
+      "soldOut": false
+    },
+    {
+      "id": "xxl",
+      "label": "XXL",
+      "soldOut": false
+    }
+  ],
+  "specs": [
+    {
+      "k": "Material",
+      "v": "100% French Terry Cotton, 420 GSM"
+    },
+    {
+      "k": "Origin",
+      "v": "Manufactured & Dyed in Los Angeles, CA"
+    },
+    {
+      "k": "Fit",
+      "v": "Relaxed / Unisex"
+    },
+    {
+      "k": "Detail",
+      "v": "Embroidered ILMANO neck label, woven side seam tag"
+    }
+  ],
+  "care": "Wash inside out, cold. Tumble dry low. Do not bleach. Iron reverse, low.",
+  "delivery": "Complimentary worldwide shipping over $250. 14-day home trial with prepaid returns.",
+  "order": 1
+}

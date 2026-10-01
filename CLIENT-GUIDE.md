@@ -1,73 +1,48 @@
 # IL MANO — Store owner guide
 
-Everything you can change yourself, without a developer. The site has no admin
-dashboard; you edit a few plain-text files, then publish. Most changes take 2 minutes.
+You edit the site from a web dashboard — no code, no terminal.
 
-## The routine (every change)
+## Logging in
 
-1. Edit the file(s) below.
-2. Added or changed a photo? Run `npm run images`. Then run `npm run check` in the project folder — it catches typos, missing photos and
-   mismatched names and tells you exactly what's wrong. Fix anything marked ✗.
-3. Publish: `git add -A && git commit -m "Update products" && git push`
-   (the site redeploys automatically). If the site doesn't update, run `vercel --prod`.
-4. Refresh the live site to confirm.
+1. Go to **your-site/admin** (e.g. https://il-mano-v1.vercel.app/admin).
+2. Click **Login with GitHub** and approve. You need a free GitHub account that the
+   developer has added as a collaborator on the repo (GitHub only lets people with
+   write access save changes).
+3. Edit something, press **Publish → Publish now**. The live site updates in about a
+   minute (Vercel redeploys). Refresh to confirm.
 
-> Never put passwords or API keys in any of these files. Those live only in the Vercel dashboard.
+If the site doesn't update after a few minutes, a typo may have failed the safety check
+(`npm run check`, run on every deploy). The previous version stays live; tell the developer.
 
----
+## What you can edit
 
-## 1. Products, prices, sizes — `data.js`
-
-**Change a price** — find the product, edit `price: 100`. Whole dollars only.
-It updates the storefront, cart, the amount Stripe charges, and the confirmation email together.
-
-**Mark a size sold out / back in stock** — in the product's `sizes`, flip `soldOut: true` ↔ `false`.
-
-**Add a product**
-1. Put the photos in the `assets/` folder (WebP, under ~500 KB each; name them clearly, e.g. `tee-black-front.webp`).
-2. In `data.js`, copy an entire existing product block (from `{` to its closing `},`) and paste it after the last one.
-3. Change **every** field: `id` (unique, lowercase, no spaces), `slug`, `name`, `category`,
-   `categoryKey` (must match a category `key`), `price`, `description`, `colors`, `sizes`, `specs`, `care`, `delivery`.
-4. Add a line to `gridCards` for each colour you want shown on the home page:
-   `{ productId: "your-id", colorId: "black", badge: null },`
-   (`badge` is the small label — `"New"`, `"Limited"`, or `null`.)
-
-**Add a colour** — add a line to the product's `colors` with a new `id`, a display `name`,
-a `hex` swatch colour, and `front` / `back` photos (use the same photo for both if you only have one).
-
-**Remove a product** — delete its block *and* its `gridCards` lines. (Don't reuse its `id` for something else; old orders refer to it.)
-
-**Shipping & tax** — `settings` at the top of `data.js`: `freeShippingOver`, `flatShipping`, `taxRate`.
-⚠ The FAQ and Shipping pages and each product's `delivery:` text are plain sentences and mention
-"$250" / "$12" — if you change the numbers, update those sentences too (see §2).
-
-**Categories** — `categoryDefs` in `data.js`. The "N pieces" labels count automatically.
-
-## 2. Wording on FAQ / Shipping & Returns / Terms / Privacy / Code of Conduct — `info-content.js`
-
-Each page is a block of text. Edit the sentences between quotes (keep the quotes and commas).
-Contact email addresses (hello@ilmano.com) appear here and in the footer in `sections.jsx` (search "mailto").
-
-## 3. Home-page text
-
-| What | Where |
+| Section in the dashboard | What it controls |
 |---|---|
-| Scrolling banner words, "Connect / Create / Inspire" pillars | `marqueeItems`, `storyPillars` in `data.js` |
-| Hero headline & intro paragraph | `Hero` in `sections.jsx` |
-| Editorial quote under the collection | `Lookbook` in `sections.jsx` |
-| Footer links, tagline | `Footer` in `sections.jsx` |
-| Our Story page | `our-story.jsx` |
-| Gallery page pieces & captions | the `GAL_PIECES` list at the top of `gallery.jsx` |
-| Search-result title/description | `<title>` / `<meta name="description">` in each `.html` file |
+| **Products** | name, price, colours + photos, sizes (tick *Sold out*), description, specs, care, delivery note, display order |
+| **Store & Home Page → Shipping & tax** | free-shipping threshold, flat rate, tax rate |
+| **Store & Home Page → Home page** | scrolling banner, Connect/Create/Inspire text, categories, special cards |
+| **Gallery & Our Story** | gallery photos + captions, the Our Story vision sentence and values |
+| **Info Pages** | FAQ, Shipping & Returns, Terms, Privacy, Code of Conduct |
 
-## 4. Photos
+**Add a product** — Products → *New Product*. Give it a unique lowercase **Product ID** (never
+change it later — orders refer to it), pick a category, add at least one colour and size. Each colour
+you tick *Show on home page* gets its own card on the home page automatically.
+**Remove a product** — open it and delete it (old orders keep their own copy of the name).
+**Change a price** — edit *Price*. It updates the storefront, cart, Stripe charge and email together.
 
-Put the original image in `assets/` (any size is fine — it's kept as the master copy) and reference it
-as `assets/filename.webp`. Then run **`npm run images`**: it creates small phone-friendly copies in
-`assets/opt/` (a 2 MB photo becomes ~50 KB on a phone) and the site picks the right size
-automatically. Commit the `assets/opt/` folder along with your photo.
-`npm run check` warns if a photo you used hasn't been through this step.
-File names are case-sensitive (`Hoodie.webp` ≠ `hoodie.webp`). The `uploads/` folder is NOT published.
+⚠ The FAQ / Shipping page and each product's *Delivery note* are plain sentences that mention
+"$250" / "$12". If you change shipping numbers, update those sentences too.
+
+## Photos
+
+Upload straight from the dashboard (WebP/JPG/PNG; ideally under ~2 MB). Small phone-friendly
+copies are generated automatically on every deploy. The `uploads/` folder in the repo is NOT published.
+
+## Not in the dashboard (needs a developer)
+
+Hero headline and footer text (`sections.jsx`), the Our Story paragraphs (`our-story.jsx`), gallery
+motion, page titles/meta descriptions (each `.html`), payment behaviour, email templates (`api/`),
+keys, and the domain.
 
 ## 5. Orders (no code needed)
 
